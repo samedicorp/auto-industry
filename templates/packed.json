@@ -123,7 +123,7 @@
                 "signature": "onStop()",
                 "args": []
             },
-            "code": "local failure = modula:call(\"onStop\"); if failure then error(failure) end"
+            "code": "local failure = modula:stop(); if failure then error(failure) end"
         },
         {
             "key": "2",
