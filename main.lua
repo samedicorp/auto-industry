@@ -33,22 +33,38 @@ function Module:onStart()
         ["511774178"] = 100,  -- Steel
         ["018262914"] = 100,  -- Al-Fe
         ["2565702107"] = 100, -- Silumin
+        ["1034957327"] = 100, -- Calcium Reinforced Copper
     }
 
     local metalwork = {
+        ["2660328728"] = 25,  -- Basic Burner
         ["1799107246"] = 100, -- Basic Pipe
         ["3936127019"] = 100, -- Basic Screw
         ["2662317132"] = 10,  -- Basic Combustion Chamber
         ["994058182"] = 10,   -- Basic Reinforced Frame S
         ["1331181119"] = 10,  -- Basic Hydraulics
+        ["1981362536"] = 10,  -- Uncommon Standard Frame M
+        ["994058204"] = 10,   -- Basic Reinforced Frame M
     }
 
     local printer = {
         ["1971447072"] = 10, -- Basic Injector
+        ["466630565"] = 100, -- Basic Fixation
     }
 
     local chemical = {
         ["2014531313"] = 100, -- Polycarbonate
+    }
+
+    local glass = {
+        ["1234754162"] = 100, -- Basic LED
+        ["1234754161"] = 100, -- Uncommon LED
+    }
+
+    local electronics = {
+        ["3808417021"] = 10, -- Uncommon Processor
+        ["1080827609"] = 1,  -- Uncommon Antenna M
+        ["4186205972"] = 10, -- Basic Power Transformer
     }
 
     local orders = {}
@@ -56,6 +72,8 @@ function Module:onStart()
     self:addOrders(orders, metalwork, "Metalwork")
     self:addOrders(orders, printer, "Printer")
     self:addOrders(orders, chemical, "Chemical")
+    self:addOrders(orders, glass, "Glass")
+    self:addOrders(orders, electronics, "Electronics")
 
     local recipes = {}
     for id, _ in pairs(orders) do
