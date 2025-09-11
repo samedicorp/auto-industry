@@ -26,30 +26,36 @@ function Module:onStart()
     local industry = modula:getService("industry")
     self.industry = industry
 
+    -- Dual Universe item IDs
+    -- see http://du-lua.dev/#/items for reference
+
     local smelter = {
-        ["511774178"] = 500, -- Steel
-        ["18262914"] = 500,  -- Al-Fe
+        ["511774178"] = 100,  -- Steel
+        ["018262914"] = 100,  -- Al-Fe
+        ["2565702107"] = 100, -- Silumin
     }
 
     local metalwork = {
         ["1799107246"] = 100, -- Basic Pipe
-        ["511774178"] = 500,  -- Steel
+        ["3936127019"] = 100, -- Basic Screw
+        ["2662317132"] = 10,  -- Basic Combustion Chamber
+        ["994058182"] = 10,   -- Basic Reinforced Frame S
+        ["1331181119"] = 10,  -- Basic Hydraulics
+    }
+
+    local printer = {
+        ["1971447072"] = 10, -- Basic Injector
+    }
+
+    local chemical = {
+        ["2014531313"] = 100, -- Polycarbonate
     }
 
     local orders = {}
-    for id, quantity in pairs(metalwork) do
-        orders[id] = {
-            quantity = quantity,
-            machine = "Metalwork",
-        }
-    end
-
-    for id, quantity in pairs(smelter) do
-        orders[id] = {
-            quantity = quantity,
-            machine = "Smelter",
-        }
-    end
+    self:addOrders(orders, smelter, "Smelter")
+    self:addOrders(orders, metalwork, "Metalwork")
+    self:addOrders(orders, printer, "Printer")
+    self:addOrders(orders, chemical, "Chemical")
 
     local recipes = {}
     for id, _ in pairs(orders) do
@@ -85,9 +91,7 @@ function Module:restartMachines()
     local industry = self.industry
     if industry then
         industry:withMachines(function(machine)
-            -- if machine:label():find("Refiner") then
             self:restartMachine(machine)
-            -- end
         end)
     end
 end
@@ -126,8 +130,17 @@ end
 -- Internal
 -- ---------------------------------------------------------------------
 
+
+function Module:addOrders(orders, itemsToAdd, type)
+    for id, quantity in pairs(itemsToAdd) do
+        orders[id] = {
+            quantity = quantity,
+            machine = type,
+        }
+    end
+end
+
 function Module:attachToScreen()
-    -- TODO: send initial container data as part of render script
     local service = modula:getService("screen")
     if service then
         local screen = service:registerScreen(self, false, self.renderScript)
