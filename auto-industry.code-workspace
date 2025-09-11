@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"name": "modula",
+			"path": "../modula"
+		},
+		{
+			"name": "custom",
+			"path": "../../autoconf/custom"
+		},
+		{
+			"name": "auto-industry",
+			"path": "."
+		},
+		{
+			"path": "../toolkit"
+		}
+	],
+	"settings": {}
+}

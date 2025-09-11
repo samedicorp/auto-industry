@@ -1,0 +1,223 @@
+{
+    "slots": {
+        "-1": {
+            "name": "unit",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "-2": {
+            "name": "construct",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "-3": {
+            "name": "player",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "-4": {
+            "name": "system",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "-5": {
+            "name": "library",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "0": {
+            "name": "slot1",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "1": {
+            "name": "slot2",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "2": {
+            "name": "slot3",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "3": {
+            "name": "slot4",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "4": {
+            "name": "slot5",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "5": {
+            "name": "slot6",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "6": {
+            "name": "slot7",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "7": {
+            "name": "slot8",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "8": {
+            "name": "slot9",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        },
+        "9": {
+            "name": "slot10",
+            "type": {
+                "methods": [],
+                "events": []
+            }
+        }
+    },
+    "handlers": [
+        {
+            "key": "0",
+            "filter": {
+                "slotKey": "-1",
+                "signature": "onStart()",
+                "args": []
+            },
+            "code": "%s\n\n-- Modula auto-generated code begins here.\nlocal modulaCore\nif useLocal then\n    modulaCore = require('samedicorp.modula.core')\nend\n\nif not modulaCore then\n    modulaCore = MODULE_core()\n    system.print(modulaSettings.name .. \" using packed version.\")\nelse\n    system.print(modulaSettings.name .. \" using local development version.\")\nend\n\nmodula = { call = function() end }\n\nlocal status, result = pcall(modulaCore.new, system, library, player, construct, unit, modulaSettings)\nif status then\n  modula = result\n  failure = modula:call(\"onStart\")\nelse\n  modula = { call = function() end }\n  failure = result\nend        \n\nif failure then\n    error(failure)\nend\n"
+        },
+        {
+            "key": "1",
+            "filter": {
+                "slotKey": "-1",
+                "signature": "onStop()",
+                "args": []
+            },
+            "code": "local failure = modula:call(\"onStop\"); if failure then error(failure) end"
+        },
+        {
+            "key": "2",
+            "filter": {
+                "slotKey": "-1",
+                "signature": "tick(timerId)",
+                "args": [
+                    {
+                        "variable": "*"
+                    }
+                ]
+            },
+            "code": "local failure = modula:call(\"onTick\", timerId); if failure then error(failure) end"
+        },
+        {
+            "key": "3",
+            "filter": {
+                "slotKey": "-4",
+                "signature": "actionStart(action)",
+                "args": [
+                    {
+                        "variable": "*"
+                    }
+                ]
+            },
+            "code": "local failure = modula:call(\"onActionStart\", action); if failure then error(failure) end"
+        },
+        {
+            "key": "4",
+            "filter": {
+                "slotKey": "-4",
+                "signature": "actionStop(action)",
+                "args": [
+                    {
+                        "variable": "*"
+                    }
+                ]
+            },
+            "code": "local failure = modula:call(\"onActionStop\", action); if failure then error(failure) end"
+        },
+        {
+            "key": "5",
+            "filter": {
+                "slotKey": "-4",
+                "signature": "actionLoop(action)",
+                "args": [
+                    {
+                        "variable": "*"
+                    }
+                ]
+            },
+            "code": "local failure = modula:call(\"onActionLoop\", action); if failure then error(failure) end"
+        },
+        {
+            "key": "6",
+            "filter": {
+                "slotKey": "-4",
+                "signature": "onUpdate()",
+                "args": []
+            },
+            "code": "local failure = modula:call(\"onUpdate\"); if failure then error(failure) end"
+        },
+        {
+            "key": "7",
+            "filter": {
+                "slotKey": "-4",
+                "signature": "onFlush()",
+                "args": []
+            },
+            "code": "local failure = modula:call(\"onFlush\"); if failure then error(failure) end"
+        },
+        {
+            "key": "8",
+            "filter": {
+                "slotKey": "-4",
+                "signature": "inputText(text)",
+                "args": [
+                    {
+                        "variable": "*"
+                    }
+                ]
+            },
+            "code": "local failure = modula:call(\"onInput\", text); if failure then error(failure) end"
+        },
+        {
+            "key": "9",
+            "filter": {
+                "slotKey": "-5",
+                "signature": "onStart()",
+                "args": []
+            },
+            "code": "%s"
+        }
+    ],
+    "methods": [],
+    "events": []
+}

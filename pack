@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# call the pack script, passing it the location of the game's lua folder
+lua ../modula/scripts/pack.lua "../../"
