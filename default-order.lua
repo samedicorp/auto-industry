@@ -1,10 +1,15 @@
+-- Dual Universe item IDs
+-- see http://du-lua.dev/#/items for reference
+
+
 return {
 
     smelter = {
-        ["511774178"] = 500,  -- Steel
-        ["018262914"] = 500,  -- Al-Fe
-        ["2565702107"] = 500, -- Silumin
-        ["1034957327"] = 500, -- Calcium Reinforced Copper
+        ["511774178"] = 1000,  -- Steel
+        ["018262914"] = 1000,  -- Al-Fe
+        ["2565702107"] = 1000, -- Silumin
+        ["1034957327"] = 500,  -- Calcium Reinforced Copper
+        ["2984358477"] = 100,  -- Stainless Steel
     },
 
     metalwork = {
@@ -19,6 +24,9 @@ return {
         ["1981362536"] = 10,  -- Uncommon Standard Frame M
         ["994058204"] = 10,   -- Basic Reinforced Frame M
         ["625289720"] = 10,   -- Basic Chemical Container S
+        ["1246524879"] = 1,   -- Uncommon Magnet
+        ["494825062"] = 1,    -- Basic Mobile Panel L
+        ["994058205"] = 1
     },
 
     printer = {
@@ -28,6 +36,8 @@ return {
 
     chemical = {
         ["2014531313"] = 500, -- Polycarbonate
+        ["4103265826"] = 500, -- Polycalcite
+        ["2097691217"] = 500, -- Polysulfide
         ["840202984"] = 1000, -- Kergon X5
     },
 
