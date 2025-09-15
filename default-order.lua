@@ -14,19 +14,22 @@ return {
 
     metalwork = {
         ["2660328728"] = 25,  -- Basic Burner
-        ["1799107246"] = 100, -- Basic Pipe
+        ["1799107246"] = 250, -- Basic Pipe
         ["3936127019"] = 100, -- Basic Screw
         ["3936127018"] = 100, -- Uncommon Screw
         ["2662317132"] = 10,  -- Basic Combustion Chamber
         ["1981362643"] = 10,  -- Basic Standard Frame S
+        ["1981362473"] = 1,   -- Basic Standard Frame M
+        ["1981362474"] = 1,   -- Basic Standard Frame L
         ["994058182"] = 10,   -- Basic Reinforced Frame S
-        ["1331181119"] = 100, -- Basic Hydraulics
-        ["1981362536"] = 10,  -- Uncommon Standard Frame M
         ["994058204"] = 10,   -- Basic Reinforced Frame M
+        ["994058205"] = 1,    -- Basic Reinforced Frame L
+        ["1981362536"] = 10,  -- Uncommon Standard Frame M
+        ["1331181119"] = 250, -- Basic Hydraulics
         ["625289720"] = 10,   -- Basic Chemical Container S
         ["1246524879"] = 1,   -- Uncommon Magnet
         ["494825062"] = 1,    -- Basic Mobile Panel L
-        ["994058205"] = 1
+        ["997368799"] = 1,    -- Basic Robotic Arm L
     },
 
     printer = {
@@ -37,8 +40,11 @@ return {
     chemical = {
         ["2014531313"] = 500, -- Polycarbonate
         ["4103265826"] = 500, -- Polycalcite
-        ["2097691217"] = 500, -- Polysulfide
         ["840202984"] = 1000, -- Kergon X5
+    },
+
+    uncommonChemical = {
+        ["2097691217"] = 500, -- Polysulfide
     },
 
     glass = {
