@@ -15,6 +15,7 @@ function Module:register(parameters)
     modula:registerForEvents(self, "onStart", "onStopping", "onCheckMachines", "onCommand")
     self.orderName = parameters.orderName or "samedicorp.auto-industry.default-order"
     self.reportMachines = parameters.reportMachines or false
+    self.problems = {}
 end
 
 -- ---------------------------------------------------------------------
@@ -67,6 +68,7 @@ function Module:onContainerChanged(container)
 end
 
 function Module:onScreenReply(reply)
+    printf("reply: %s", reply)
 end
 
 function Module:onCheckMachines()
@@ -80,9 +82,12 @@ function Module:restartMachines()
             self:restartMachine(machine)
         end)
     end
+
+    self:updateStatus()
 end
 
 function Module:restartMachine(machine)
+    self:updateProblems(machine)
     if machine:isStopped() or machine:isMissingIngredients() or machine:isMissingSchematics() or machine:isPending() then
         local index = (1 + (machine.index or 0) % #self.recipes)
         machine.index = index
@@ -122,6 +127,35 @@ end
 -- Internal
 -- ---------------------------------------------------------------------
 
+function Module:updateProblems(machine)
+    local problems = self.problems
+    local key = machine:label()
+    if machine:isMissingIngredients() then
+        problems[key] = "Needs Ingredients"
+    elseif machine:isMissingSchematics() then
+        problems[key] = "Needs Schematics"
+    elseif machine:isFull() then
+        problems[key] = "Output Full"
+    elseif machine:isRunning() then
+        problems[key] = nil
+    end
+end
+
+function Module:updateStatus(status)
+    local screen = self.screen
+    local status = {}
+
+    if screen then
+        screen:send({ command = "status", status = "first" })
+
+        local problems = self.problems
+        for key, problem in pairs(problems) do
+            table.insert(status, string.format("%s: %s\n", key, problem))
+        end
+
+        screen:send({ command = "status", status = status })
+    end
+end
 
 function Module:addOrder(buildList, itemsToAdd, type)
     for id, quantity in pairs(itemsToAdd) do
@@ -135,28 +169,38 @@ end
 function Module:attachToScreen()
     local service = modula:getService("screen")
     if service then
-        local screen = service:registerScreen(self, false, self.renderScript)
+        local screen = service:registerScreen(self, "main", self.renderScript)
         if screen then
             self.screen = screen
+            self:updateStatus()
         end
     end
 end
 
 Module.renderScript = [[
 
-containers = containers or {}
+status = status or {}
 
 if payload then
-    local name = payload.name
-    if name then
-        containers[name] = payload
+
+    if payload.command == "status" then
+        status = payload.status
     end
-    reply = { name = name, result = "ok" }
+    reply = { name = payload.command, result = "ok" }
 end
 
 local screen = toolkit.Screen.new()
 local layer = screen:addLayer()
-local chart = layer:addChart(layer.rect:inset(10), containers, "Play")
+
+if not status or #status == 0 then
+    table.insert(status, "All machines operational.")
+end
+
+local y = 40
+for n, line in ipairs(status) do
+    local label = layer:addLabel({0, y, 300, y}, line)
+    y = y + 20
+end
 
 layer:render()
 screen:scheduleRefresh()

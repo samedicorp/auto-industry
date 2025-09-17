@@ -23,12 +23,13 @@ return {
         ["1981362474"] = 1,   -- Basic Standard Frame L
         ["994058182"] = 10,   -- Basic Reinforced Frame S
         ["994058204"] = 10,   -- Basic Reinforced Frame M
-        ["994058205"] = 1,    -- Basic Reinforced Frame L
+        ["994058205"] = 2,    -- Basic Reinforced Frame L
         ["1981362536"] = 10,  -- Uncommon Standard Frame M
-        ["1331181119"] = 250, -- Basic Hydraulics
+        ["1331181119"] = 500, -- Basic Hydraulics
         ["625289720"] = 10,   -- Basic Chemical Container S
         ["1246524879"] = 1,   -- Uncommon Magnet
         ["494825062"] = 1,    -- Basic Mobile Panel L
+        ["997368796"] = 1,    -- Basic Robotic Arm M
         ["997368799"] = 1,    -- Basic Robotic Arm L
     },
 
@@ -38,9 +39,10 @@ return {
     },
 
     chemical = {
-        ["2014531313"] = 500, -- Polycarbonate
-        ["4103265826"] = 500, -- Polycalcite
-        ["840202984"] = 1000, -- Kergon X5
+        ["2014531313"] = 500,  -- Polycarbonate
+        ["4103265826"] = 500,  -- Polycalcite
+        ["840202984"] = 1000,  -- Kergon X5
+        ["2579672037"] = 1000, -- Nitron
     },
 
     uncommonChemical = {
@@ -55,10 +57,14 @@ return {
     },
 
     electronics = {
-        ["794666749"] = 100, -- Basic Component
-        ["3808417022"] = 50, -- Basic Processor
-        ["3808417021"] = 10, -- Uncommon Processor
-        ["1080827609"] = 1,  -- Uncommon Antenna M
-        ["4186205972"] = 10, -- Basic Power Transformer
+        ["1297540454"] = 200, -- Basic Electronics
+        ["1297540453"] = 100, -- Uncommon Electronics
+        ["794666749"] = 500,  -- Basic Component
+        ["3808417022"] = 50,  -- Basic Processor
+        ["3808417021"] = 10,  -- Uncommon Processor
+        ["1080827609"] = 1,   -- Uncommon Antenna M
+        ["4186205972"] = 10,  -- Basic Power Transformer
+        ["1775106597"] = 1,   -- Uncommon Core System L
+        ["527681755"] = 25,   -- Basic Power System
     }
 }
