@@ -130,7 +130,6 @@ end
 
 function Module:updateProblems(machine)
     local problems = self.problems
-    local key = machine:label()
     local changed = false
 
     local newStatus
@@ -145,7 +144,10 @@ function Module:updateProblems(machine)
     end
 
     if newStatus then
-        newStatus = string.format("%s making %s", newStatus, machine:mainProduct().name)
+        local product = machine:mainProduct()
+        debugf("Product: %s", toString(product))
+        local key = product.name
+        newStatus = string.format("%s for %s", newStatus, machine:label())
         if problems[key] ~= newStatus then
             problems[key] = newStatus
             self.problemsChanged = true
@@ -160,15 +162,8 @@ function Module:updateStatus(status)
     if screen and self.problemsChanged then
         local problems = self.problems
         self.problemsChanged = false
-        for key, problem in pairs(problems) do
-            table.insert(status, string.format("%s: %s\n", key, problem))
-        end
 
-        if #status == 0 then
-            table.insert(status, "All machines operational.")
-        end
-
-        screen:send({ command = "status", status = status })
+        screen:send({ command = "status", status = problems })
         self.lastStatus = status
     end
 end
@@ -208,26 +203,29 @@ end
 local screen = toolkit.Screen.new()
 local layer = screen:addLayer()
 
-if not status or #status == 0 then
-    table.insert(status, "Starting Industry...")
-end
-
 local cOK = toolkit.Color.new(0, 255, 0)
 local cWarn = toolkit.Color.new(255, 0, 0)
 
+local gotItems = false
 local y = 40
-for n, line in ipairs(status) do
+for n, line in pairs(status) do
     local color
     if line == "Starting Industry..." then
         color = toolkit.white
-    elseif line:find("Running") then
+    elseif string.find(line, "Running") then
         color = cOK
     else
         color = cWarn
     end
 
-    local label = layer:addLabel({0, y, 300, y}, line, { fill = color })
+    local label = layer:addLabel({0, y, 300, y}, n)
+    local value = layer:addLabel({300, y, 300, y}, line, { fill = color })
     y = y + 25
+    gotItems = true
+end
+
+if not gotItems then
+    local label = layer:addLabel({0, 0, 300, 40}, "Starting Industry...")
 end
 
 layer:render()
