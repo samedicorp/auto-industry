@@ -88,7 +88,6 @@ function Module:restartMachines()
 end
 
 function Module:restartMachine(machine)
-    self:updateProblems(machine)
     if machine:isStopped() or machine:isMissingIngredients() or machine:isMissingSchematics() or machine:isPending() then
         local index = (1 + (machine.index or 0) % #self.recipes)
         machine.index = index
@@ -101,14 +100,17 @@ function Module:restartMachine(machine)
 
             if machine:setRecipe(recipe) == 0 then
                 machine.target = recipe
+                machine.actual = nil
                 machine:start(order.quantity)
             end
         end
+        self:updateProblems(machine)
     elseif machine:isRunning() then
         if machine.actual ~= machine.target then
             debugf("Running '%s' for %s (%s).", system.getItem(machine.target).locDisplayName, machine:name(),
                 machine:label())
             machine.actual = machine.target
+            self:updateProblems(machine)
         end
     end
 end
@@ -134,38 +136,46 @@ function Module:updateProblems(machine)
 
     local newStatus
     if machine:isMissingIngredients() then
-        newStatus = "Needs Ingredients"
+        local list = {}
+        for n, input in pairs(machine:inputs()) do
+            table.insert(list, string.format("%s x%.2f", input.name, input.quantity))
+        end
+        newStatus = string.format("Needs Ingredients: %s", table.concat(list, ", "))
     elseif machine:isMissingSchematics() then
         newStatus = "Needs Schematics"
     elseif machine:isFull() then
         newStatus = "Output Full"
     elseif machine:isRunning() then
         newStatus = "Running"
+        debugf("Running '%s'.", machine:label())
     end
 
     if newStatus then
         local product = machine:mainProduct()
-        debugf("Product: %s", toString(product))
+
         local key = product.name
         newStatus = string.format("%s for %s", newStatus, machine:label())
         if problems[key] ~= newStatus then
             problems[key] = newStatus
-            self.problemsChanged = true
+            local screen = self.screen
+            if screen then
+                screen:send({ command = "status", status = { key = key, value = newStatus } })
+            end
         end
     end
 end
 
 function Module:updateStatus(status)
-    local screen = self.screen
-    local status = {}
+    -- local screen = self.screen
+    -- local status = {}
 
-    if screen and self.problemsChanged then
-        local problems = self.problems
-        self.problemsChanged = false
+    -- if screen and self.problemsChanged then
+    --     local problems = self.problems
+    --     self.problemsChanged = false
 
-        screen:send({ command = "status", status = problems })
-        self.lastStatus = status
-    end
+    --     screen:send({ command = "status", status = problems })
+    --     self.lastStatus = status
+    -- end
 end
 
 function Module:addOrder(buildList, itemsToAdd, type)
@@ -195,7 +205,7 @@ status = status or {}
 if payload then
 
     if payload.command == "status" then
-        status = payload.status
+        status[payload.status.key] = payload.status.value
     end
     reply = { name = payload.command, result = "ok" }
 end
