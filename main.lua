@@ -34,16 +34,22 @@ function Module:onStart()
     local order = require(self.orderName)
     local buildList = {}
 
-    self:addOrder(buildList, order.smelter, "Smelter")
-    self:addOrder(buildList, order.metalwork, "Metalwork")
-    self:addOrder(buildList, order.printer, "Printer")
-    self:addOrder(buildList, order.chemical, "Chemical")
-    self:addOrder(buildList, order.glass, "Glass")
-    self:addOrder(buildList, order.electronics, "Electronics")
+    self:addOrder(buildList, order.smelter, "Basic Smelter")
+    self:addOrder(buildList, order.metalwork, "Basic Metalwork Industry")
+    self:addOrder(buildList, order.printer, "Basic 3D Printer")
+    self:addOrder(buildList, order.chemical, "Basic Chemical industry")
+    self:addOrder(buildList, order.glass, "Basic Glass Furnace")
+    self:addOrder(buildList, order.electronics, "Basic Electronics industry")
 
     local recipes = {}
-    for id, _ in pairs(buildList) do
-        table.insert(recipes, id)
+
+    for recipe, order in pairs(buildList) do
+        local machineRecipe = recipes[order.machine]
+        if not machineRecipe then
+            machineRecipe = {}
+            recipes[order.machine] = machineRecipe
+        end
+        table.insert(machineRecipe, recipe)
     end
 
     self.buildList = buildList
@@ -83,17 +89,21 @@ function Module:restartMachines()
             self:restartMachine(machine)
         end)
     end
-
-    self:updateStatus()
 end
 
 function Module:restartMachine(machine)
     if machine:isStopped() or machine:isMissingIngredients() or machine:isMissingSchematics() or machine:isPending() then
-        local index = (1 + (machine.index or 0) % #self.recipes)
+        local recipes = self.recipes[machine:label()]
+        if not recipes or #recipes == 0 then
+            debugf("No recipes for %s - %s", machine:label(), machine:name())
+            return
+        end
+
+        local index = (1 + (machine.index or 0) % #recipes)
         machine.index = index
-        local recipe = self.recipes[index]
-        local order = self.buildList[recipe]
-        if machine:label():find(order.machine) then
+        local recipe = recipes[index]
+        local buildOrder = self.buildList[recipe]
+        if machine:label():find(buildOrder.machine) then
             if not machine:isStopped() then
                 machine:stop()
             end
@@ -101,7 +111,7 @@ function Module:restartMachine(machine)
             if machine:setRecipe(recipe) == 0 then
                 machine.target = recipe
                 machine.actual = nil
-                machine:start(order.quantity)
+                machine:start(buildOrder.quantity)
             end
         end
         self:updateProblems(machine)
@@ -132,29 +142,28 @@ end
 
 function Module:updateProblems(machine)
     local problems = self.problems
-    local changed = false
 
     local newStatus
     if machine:isMissingIngredients() then
         local list = {}
         for n, input in pairs(machine:inputs()) do
-            table.insert(list, string.format("%s x%.2f", input.name, input.quantity))
+            table.insert(list, string.format("%s %s", input.name, input.quantity))
         end
-        newStatus = string.format("Needs Ingredients: %s", table.concat(list, ", "))
+        newStatus = string.format("Needs: %s", table.concat(list, ", "))
     elseif machine:isMissingSchematics() then
         newStatus = "Needs Schematics"
     elseif machine:isFull() then
         newStatus = "Output Full"
     elseif machine:isRunning() then
         newStatus = "Running"
-        debugf("Running '%s'.", machine:label())
+        debugf("Running '%s' - %s.", machine:label(), machine:mainProduct().name)
     end
 
     if newStatus then
         local product = machine:mainProduct()
 
         local key = product.name
-        newStatus = string.format("%s for %s", newStatus, machine:label())
+        newStatus = string.format("%s %s", machine:label(), newStatus)
         if problems[key] ~= newStatus then
             problems[key] = newStatus
             local screen = self.screen
@@ -163,19 +172,6 @@ function Module:updateProblems(machine)
             end
         end
     end
-end
-
-function Module:updateStatus(status)
-    -- local screen = self.screen
-    -- local status = {}
-
-    -- if screen and self.problemsChanged then
-    --     local problems = self.problems
-    --     self.problemsChanged = false
-
-    --     screen:send({ command = "status", status = problems })
-    --     self.lastStatus = status
-    -- end
 end
 
 function Module:addOrder(buildList, itemsToAdd, type)
@@ -193,7 +189,6 @@ function Module:attachToScreen()
         local screen = service:registerScreen(self, "main", self.renderScript)
         if screen then
             self.screen = screen
-            self:updateStatus()
         end
     end
 end

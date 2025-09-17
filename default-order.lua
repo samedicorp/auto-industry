@@ -50,8 +50,8 @@ return {
     },
 
     glass = {
-        ["3308209457"] = 100, -- Glass Product
-        ["1942154251"] = 100, -- Advanced Glass Product
+        ["3308209457"] = 500, -- Glass Product
+        ["1942154251"] = 500, -- Advanced Glass Product
         ["1234754162"] = 100, -- Basic LED
         ["1234754161"] = 100, -- Uncommon LED
     },
