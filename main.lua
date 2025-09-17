@@ -34,6 +34,7 @@ function Module:onStart()
     local order = require(self.orderName)
     local buildList = {}
 
+    self:addOrder(buildList, order.refiner, "Basic Refiner")
     self:addOrder(buildList, order.smelter, "Basic Smelter")
     self:addOrder(buildList, order.metalwork, "Basic Metalwork Industry")
     self:addOrder(buildList, order.printer, "Basic 3D Printer")
@@ -61,6 +62,13 @@ function Module:onStart()
 
     if self.reportMachines then
         industry:reportMachines()
+    end
+
+    local industry = self.industry
+    if industry then
+        industry:withMachines(function(machine)
+            self:updateProblems(machine)
+        end)
     end
 
     self:restartMachines()
