@@ -231,8 +231,8 @@ for n, line in pairs(status) do
         color = cWarn
     end
 
-    local label = layer:addLabel({0, y, 300, y}, n)
-    local value = layer:addLabel({300, y, 300, y}, line, { fill = color })
+    local label = layer:addLabel({0, y, 300, y}, n, { fill = color })
+    local value = layer:addLabel({300, y, 300, y}, line)
     y = y + 25
     gotItems = true
 end

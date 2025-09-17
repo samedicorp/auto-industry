@@ -60,7 +60,6 @@ return {
     printer = {
         ["1971447072"] = 10, -- Basic Injector
         ["466630565"] = 100, -- Basic Fixation
-        ["997368796"] = 1,   -- Basic Robotic Arm M
     },
 
     chemical = {
