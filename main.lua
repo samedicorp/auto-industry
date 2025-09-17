@@ -16,6 +16,7 @@ function Module:register(parameters)
     self.orderName = parameters.orderName or "samedicorp.auto-industry.default-order"
     self.reportMachines = parameters.reportMachines or false
     self.problems = {}
+    self.problemsChanged = true
 end
 
 -- ---------------------------------------------------------------------
@@ -130,14 +131,25 @@ end
 function Module:updateProblems(machine)
     local problems = self.problems
     local key = machine:label()
+    local changed = false
+
+    local newStatus
     if machine:isMissingIngredients() then
-        problems[key] = "Needs Ingredients"
+        newStatus = "Needs Ingredients"
     elseif machine:isMissingSchematics() then
-        problems[key] = "Needs Schematics"
+        newStatus = "Needs Schematics"
     elseif machine:isFull() then
-        problems[key] = "Output Full"
+        newStatus = "Output Full"
     elseif machine:isRunning() then
-        problems[key] = nil
+        newStatus = "Running"
+    end
+
+    if newStatus then
+        newStatus = newStatus .. string.format(" (%s)", machine:mainProduct().name)
+        if problems[key] ~= newStatus then
+            problems[key] = newStatus
+            self.problemsChanged = true
+        end
     end
 end
 
@@ -145,15 +157,19 @@ function Module:updateStatus(status)
     local screen = self.screen
     local status = {}
 
-    if screen then
-        screen:send({ command = "status", status = "first" })
-
+    if screen and self.problemsChanged then
         local problems = self.problems
+        self.problemsChanged = false
         for key, problem in pairs(problems) do
             table.insert(status, string.format("%s: %s\n", key, problem))
         end
 
+        if #status == 0 then
+            table.insert(status, "All machines operational.")
+        end
+
         screen:send({ command = "status", status = status })
+        self.lastStatus = status
     end
 end
 
@@ -193,13 +209,25 @@ local screen = toolkit.Screen.new()
 local layer = screen:addLayer()
 
 if not status or #status == 0 then
-    table.insert(status, "All machines operational.")
+    table.insert(status, "Starting Industry...")
 end
+
+local cOK = toolkit.Color.new(0, 255, 0)
+local cWarn = toolkit.Color.new(255, 0, 0)
 
 local y = 40
 for n, line in ipairs(status) do
-    local label = layer:addLabel({0, y, 300, y}, line)
-    y = y + 20
+    local color
+    if line == "Starting Industry..." then
+        color = toolkit.white
+    elseif line == "Running" then
+        color = cOK
+    else
+        color = cWarn
+    end
+
+    local label = layer:addLabel({0, y, 300, y}, line, { fill = color })
+    y = y + 25
 end
 
 layer:render()
