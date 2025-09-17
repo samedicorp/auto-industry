@@ -37,29 +37,30 @@ return {
     },
 
     metalwork = {
-        ["2660328728"] = 25,  -- Basic Burner
-        ["1799107246"] = 250, -- Basic Pipe
-        ["3936127019"] = 100, -- Basic Screw
-        ["3936127018"] = 100, -- Uncommon Screw
-        ["2662317132"] = 10,  -- Basic Combustion Chamber
-        ["1981362643"] = 10,  -- Basic Standard Frame S
-        ["1981362473"] = 1,   -- Basic Standard Frame M
-        ["1981362474"] = 1,   -- Basic Standard Frame L
-        ["994058182"] = 10,   -- Basic Reinforced Frame S
-        ["994058204"] = 10,   -- Basic Reinforced Frame M
-        ["994058205"] = 2,    -- Basic Reinforced Frame L
-        ["1981362536"] = 10,  -- Uncommon Standard Frame M
-        ["1331181119"] = 500, -- Basic Hydraulics
-        ["625289720"] = 10,   -- Basic Chemical Container S
-        ["1246524879"] = 1,   -- Uncommon Magnet
-        ["494825062"] = 1,    -- Basic Mobile Panel L
-        ["997368796"] = 1,    -- Basic Robotic Arm M
-        ["997368799"] = 1,    -- Basic Robotic Arm L
+        ["2660328728"] = 25,   -- Basic Burner
+        ["1799107246"] = 1024, -- Basic Pipe
+        ["3936127019"] = 100,  -- Basic Screw
+        ["3936127018"] = 100,  -- Uncommon Screw
+        ["2662317132"] = 10,   -- Basic Combustion Chamber
+        ["1981362643"] = 10,   -- Basic Standard Frame S
+        ["1981362473"] = 1,    -- Basic Standard Frame M
+        ["1981362474"] = 1,    -- Basic Standard Frame L
+        ["994058182"] = 5,     -- Basic Reinforced Frame S
+        ["994058204"] = 10,    -- Basic Reinforced Frame M
+        ["994058205"] = 1,     -- Basic Reinforced Frame L
+        ["1981362536"] = 10,   -- Uncommon Standard Frame M
+        ["1331181119"] = 128,  -- Basic Hydraulics
+        ["625289720"] = 10,    -- Basic Chemical Container S
+        ["1246524879"] = 1,    -- Uncommon Magnet
+        ["494825062"] = 1,     -- Basic Mobile Panel L
+        ["997368796"] = 1,     -- Basic Robotic Arm M
+        ["997368799"] = 1,     -- Basic Robotic Arm L
     },
 
     printer = {
         ["1971447072"] = 10, -- Basic Injector
         ["466630565"] = 100, -- Basic Fixation
+        ["997368796"] = 1,   -- Basic Robotic Arm M
     },
 
     chemical = {
@@ -74,10 +75,10 @@ return {
     },
 
     glass = {
-        ["3308209457"] = 500, -- Glass Product
-        ["1942154251"] = 500, -- Advanced Glass Product
-        ["1234754162"] = 100, -- Basic LED
-        ["1234754161"] = 100, -- Uncommon LED
+        ["3308209457"] = 1000, -- Glass Product
+        ["1942154251"] = 500,  -- Advanced Glass Product
+        ["1234754162"] = 100,  -- Basic LED
+        ["1234754161"] = 100,  -- Uncommon LED
     },
 
     electronics = {

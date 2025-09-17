@@ -171,7 +171,7 @@ function Module:updateProblems(machine)
         local product = machine:mainProduct()
 
         local key = product.name
-        newStatus = string.format("%s %s", machine:label(), newStatus)
+        newStatus = string.format("%s %s", machine:simpleLabel(), newStatus)
         if problems[key] ~= newStatus then
             problems[key] = newStatus
             local screen = self.screen
