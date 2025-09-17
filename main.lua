@@ -69,7 +69,7 @@ function Module:onContainerChanged(container)
 end
 
 function Module:onScreenReply(reply)
-    printf("reply: %s", reply)
+    -- printf("reply: %s", reply)
 end
 
 function Module:onCheckMachines()
@@ -145,7 +145,7 @@ function Module:updateProblems(machine)
     end
 
     if newStatus then
-        newStatus = newStatus .. string.format(" (%s)", machine:mainProduct().name)
+        newStatus = string.format("%s making %s", newStatus, machine:mainProduct().name)
         if problems[key] ~= newStatus then
             problems[key] = newStatus
             self.problemsChanged = true
@@ -220,7 +220,7 @@ for n, line in ipairs(status) do
     local color
     if line == "Starting Industry..." then
         color = toolkit.white
-    elseif line == "Running" then
+    elseif line:find("Running") then
         color = cOK
     else
         color = cWarn
