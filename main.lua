@@ -160,12 +160,15 @@ function Module:updateProblems(machine)
     local problems = self.problems
 
     local newStatus
+    local newDetail
+
     if machine:isMissingIngredients() then
         local list = {}
         for n, input in pairs(machine:inputs()) do
             table.insert(list, string.format("%s %s", input.name, input.quantity))
         end
-        newStatus = string.format("Needs: %s", table.concat(list, ", "))
+        newStatus = string.format("Needs Ingredients")
+        newDetail = table.concat(list, ", ")
     elseif machine:isMissingSchematics() then
         newStatus = "Needs Schematics"
     elseif machine:isFull() then
@@ -187,7 +190,7 @@ function Module:updateProblems(machine)
             problems[key] = newStatus
             local screen = self.screen
             if screen then
-                screen:send({ command = "status", status = { key = key, value = newStatus } })
+                screen:send({ command = "status", status = { key = key, value = newStatus, detail = newDetail } })
             end
         end
     end
@@ -215,11 +218,13 @@ end
 Module.renderScript = [[
 
 status = status or {}
+detail = detail or {}
 
 if payload then
-
     if payload.command == "status" then
-        status[payload.status.key] = payload.status.value
+        local key = payload.status.key
+        status[key] = payload.status.value
+        detail[key] = payload.status.detail
     end
     reply = { name = payload.command, result = "ok" }
 end
@@ -227,8 +232,11 @@ end
 local screen = toolkit.Screen.new()
 local layer = screen:addLayer()
 
-local cOK = toolkit.Color.new(0, 255, 0)
-local cWarn = toolkit.Color.new(255, 0, 0)
+local cOK = toolkit.Color.new(0, 1, 0)
+local cWarn = toolkit.Color.new(1, 0, 0)
+local cDetail = toolkit.Color.new(0.39, 0.39, 0.39)
+local fDetail = toolkit.Font.new("Play", 12)
+
 
 local gotItems = false
 local y = 40
@@ -244,6 +252,7 @@ for n, line in pairs(status) do
 
     local label = layer:addLabel({0, y, 300, y}, n, { fill = color })
     local value = layer:addLabel({300, y, 300, y}, line)
+    local l2 = layer:addLabel({320, y + 10, 300, y + 10}, detail[n] or "", { font = fDetail, fill = cDetail })
     y = y + 25
     gotItems = true
 end
