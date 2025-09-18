@@ -168,7 +168,7 @@ function Module:updateProblems(machine)
         if machine.target then
             local order = self.buildList[machine.target]
             local pr = machine:mainProduct()
-            debugf("product: %s", toString(pr.recipes))
+            -- debugf("product: %s", toString(pr.recipes))
             quantityMultiplier = order.quantity /
                 pr.recipes[1].products[1]
                 .quantity -- todo find the recipe that this machine is using
@@ -176,7 +176,7 @@ function Module:updateProblems(machine)
         for n, input in pairs(machine:inputs()) do
             table.insert(list, string.format("%s %s", input.name, input.quantity * quantityMultiplier))
         end
-        newStatus = string.format("Needs Ingredients")
+        newStatus = string.format("%s Needs Ingredients", machine:name())
         newDetail = table.concat(list, ", ")
     elseif machine:isMissingSchematics() then
         newStatus = "Needs Schematics"
@@ -187,14 +187,15 @@ function Module:updateProblems(machine)
         if machine.triedSingleRun then
             newStatus = newStatus .. " (Single Batch)"
         end
-        debugf("Running '%s' - %s.", machine:label(), machine:mainProduct().name)
     end
 
     if newStatus then
         local product = machine:mainProduct()
 
         local key = product.name
-        newStatus = string.format("%s %s", machine:simpleLabel(), newStatus)
+        if newDetail == nil then
+            newDetail = machine:name()
+        end
         if problems[key] ~= newStatus then
             problems[key] = newStatus
             local screen = self.screen
@@ -261,7 +262,7 @@ for n, line in pairs(status) do
 
     local label = layer:addLabel({0, y, 300, y}, n, { fill = color })
     local value = layer:addLabel({300, y, 300, y}, line)
-    local l2 = layer:addLabel({320, y + 9, 300, y + 9}, detail[n] or "", { font = fDetail, fill = cDetail })
+    local l2 = layer:addLabel({302, y + 9, 300, y + 9}, detail[n] or "", { font = fDetail, fill = cDetail })
     y = y + 22
     gotItems = true
 end

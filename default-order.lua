@@ -34,6 +34,7 @@ return {
         ["2565702107"] = 1000, -- Silumin
         ["1034957327"] = 500,  -- Calcium Reinforced Copper
         ["2984358477"] = 100,  -- Stainless Steel
+        ["231758472"] = 100,   -- Duralumin
     },
 
     metalwork = {
@@ -91,5 +92,6 @@ return {
         ["1775106618"] = 1,   -- Uncommon Core System M
         -- ["1775106597"] = 1,   -- Uncommon Core System L
         ["527681755"] = 25,   -- Basic Power System
+        ["527681752"] = 25,   -- Uncommon Power System
     }
 }
