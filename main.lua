@@ -164,8 +164,17 @@ function Module:updateProblems(machine)
 
     if machine:isMissingIngredients() then
         local list = {}
+        local quantityMultiplier = 1
+        if machine.target then
+            local order = self.buildList[machine.target]
+            local pr = machine:mainProduct()
+            debugf("product: %s", toString(pr.recipes))
+            quantityMultiplier = order.quantity /
+                pr.recipes[1].products[1]
+                .quantity -- todo find the recipe that this machine is using
+        end
         for n, input in pairs(machine:inputs()) do
-            table.insert(list, string.format("%s %s", input.name, input.quantity))
+            table.insert(list, string.format("%s %s", input.name, input.quantity * quantityMultiplier))
         end
         newStatus = string.format("Needs Ingredients")
         newDetail = table.concat(list, ", ")
@@ -252,8 +261,8 @@ for n, line in pairs(status) do
 
     local label = layer:addLabel({0, y, 300, y}, n, { fill = color })
     local value = layer:addLabel({300, y, 300, y}, line)
-    local l2 = layer:addLabel({320, y + 10, 300, y + 10}, detail[n] or "", { font = fDetail, fill = cDetail })
-    y = y + 25
+    local l2 = layer:addLabel({320, y + 9, 300, y + 9}, detail[n] or "", { font = fDetail, fill = cDetail })
+    y = y + 22
     gotItems = true
 end
 
