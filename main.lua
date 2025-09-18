@@ -174,7 +174,7 @@ function Module:updateProblems(machine)
                 .quantity -- todo find the recipe that this machine is using
         end
         for n, input in pairs(machine:inputs()) do
-            table.insert(list, string.format("%s %s", input.name, input.quantity * quantityMultiplier))
+            table.insert(list, string.format("%s %s", input.name, math.floor(input.quantity * quantityMultiplier)))
         end
         newStatus = string.format("%s Needs Ingredients", machine:name())
         newDetail = table.concat(list, ", ")
@@ -186,6 +186,14 @@ function Module:updateProblems(machine)
         newStatus = "Running"
         if machine.triedSingleRun then
             newStatus = newStatus .. " (Single Batch)"
+        end
+    elseif machine:isPending() then
+        newStatus = "OK"
+        local order = self.buildList[toString(machine:mainProduct().id)]
+        if order then
+            newDetail = string.format("x %s", math.floor(order.quantity))
+        else
+            newDetail = string.format("x %s", machine:mainProduct().id)
         end
     end
 
@@ -243,28 +251,33 @@ local screen = toolkit.Screen.new()
 local layer = screen:addLayer()
 
 local cOK = toolkit.Color.new(0, 1, 0)
+local cRunning = toolkit.Color.new(1, 1, 0)
 local cWarn = toolkit.Color.new(1, 0, 0)
 local cDetail = toolkit.Color.new(0.39, 0.39, 0.39)
 local fDetail = toolkit.Font.new("Play", 12)
 
 
 local gotItems = false
-local y = 40
+local y = 22
 for n, line in pairs(status) do
     local color
-    if line == "Starting Industry..." then
-        color = toolkit.white
-    elseif string.find(line, "Running") then
+    local skip = false
+    if string.find(line, "Running") then
+        color = cRunning
+    elseif string.find(line, "OK") then
         color = cOK
+        skip = true
     else
         color = cWarn
     end
 
-    local label = layer:addLabel({0, y, 300, y}, n, { fill = color })
-    local value = layer:addLabel({300, y, 300, y}, line)
-    local l2 = layer:addLabel({302, y + 9, 300, y + 9}, detail[n] or "", { font = fDetail, fill = cDetail })
-    y = y + 22
-    gotItems = true
+    if not skip then
+        local label = layer:addLabel({10, y, 300, y}, n, { fill = color })
+        local value = layer:addLabel({300, y, 300, y}, line)
+        local l2 = layer:addLabel({302, y + 9, 300, y + 9}, detail[n] or "", { font = fDetail, fill = cDetail })
+        y = y + 22
+        gotItems = true
+    end
 end
 
 if not gotItems then
