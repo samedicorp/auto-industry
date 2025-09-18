@@ -88,7 +88,8 @@ return {
         ["3808417021"] = 10,  -- Uncommon Processor
         ["1080827609"] = 1,   -- Uncommon Antenna M
         ["4186205972"] = 10,  -- Basic Power Transformer
-        ["1775106597"] = 1,   -- Uncommon Core System L
+        ["1775106618"] = 1,   -- Uncommon Core System M
+        -- ["1775106597"] = 1,   -- Uncommon Core System L
         ["527681755"] = 25,   -- Basic Power System
     }
 }
