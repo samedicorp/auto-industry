@@ -56,7 +56,7 @@ function Module:onStart()
     self.buildList = buildList
     self.recipes = recipes
 
-    modula:addTimer("onCheckMachines", 2.0)
+    modula:addTimer("onCheckMachines", 5.0)
 
     self:attachToScreen()
 
