@@ -100,15 +100,7 @@ function Module:restartMachines()
 end
 
 function Module:restartMachine(machine)
-    if machine:isMissingIngredients() and not machine.triedSingleRun then
-        -- try to run once for a single batch, to get ingredients moving
-        -- this may be useful for machines that are trying to produce a large
-        -- batch of something, but don't have enough ingredients to do so
-        machine.triedSingleRun = true
-        machine:start(1)
-        debugf("Trying single batch of '%s' for %s (%s).", system.getItem(machine.target).locDisplayName, machine:name(),
-            machine:label())
-    elseif machine:isStopped() or machine:isMissingIngredients() or machine:isMissingSchematics() or machine:isPending() then
+    if machine:isStopped() or machine:isMissingIngredients() or machine:isMissingSchematics() or machine:isPending() then
         local recipes = self.recipes[machine:label()]
         if not recipes or #recipes == 0 then
             debugf("No recipes for %s - %s", machine:label(), machine:name())
@@ -125,7 +117,6 @@ function Module:restartMachine(machine)
             end
 
             if machine:setRecipe(recipe) == 0 then
-                machine.triedSingleRun = false
                 machine.target = recipe
                 machine.actual = nil
                 machine:start(buildOrder.quantity)
@@ -184,9 +175,6 @@ function Module:updateProblems(machine)
         newStatus = "Output Full"
     elseif machine:isRunning() then
         newStatus = "Running"
-        if machine.triedSingleRun then
-            newStatus = newStatus .. " (Single Batch)"
-        end
     elseif machine:isPending() then
         newStatus = "OK"
         local order = self.buildList[toString(machine:mainProduct().id)]
