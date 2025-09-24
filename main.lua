@@ -37,10 +37,10 @@ function Module:onStart()
     self:addOrder(buildList, order.refiner, "Basic Refiner")
     self:addOrder(buildList, order.smelter, "Basic Smelter")
     self:addOrder(buildList, order.metalwork, "Basic Metalwork Industry")
-    self:addOrder(buildList, order.printer, "Basic 3D Printer")
     self:addOrder(buildList, order.chemical, "Basic Chemical industry")
     self:addOrder(buildList, order.glass, "Basic Glass Furnace")
     self:addOrder(buildList, order.electronics, "Basic Electronics industry")
+    self:addOrder(buildList, order.printer, "Basic 3D Printer")
 
     local recipes = {}
 
@@ -56,7 +56,7 @@ function Module:onStart()
     self.buildList = buildList
     self.recipes = recipes
 
-    modula:addTimer("onCheckMachines", 5.0)
+    modula:addTimer("onCheckMachines", 2.0)
 
     self:attachToScreen()
 

@@ -36,14 +36,14 @@
             }
         },
         "0": {
-            "name": "slot1",
+            "name": "core",
             "type": {
                 "methods": [],
                 "events": []
             }
         },
         "1": {
-            "name": "slot2",
+            "name": "screen",
             "type": {
                 "methods": [],
                 "events": []

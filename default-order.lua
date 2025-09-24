@@ -63,6 +63,7 @@ return {
     printer = {
         ["1971447072"] = 10, -- Basic Injector
         ["466630565"] = 100, -- Basic Fixation
+        ["466630564"] = 100, -- Uncommon Fixation
         ["184261487"] = 1,   -- Uncommon Screen S
         ["567008215"] = 1,   -- Uncommon Casing S
     },
