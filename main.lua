@@ -153,28 +153,39 @@ function Module:updateProblems(machine)
     local newStatus
     local newDetail
 
+    local product = machine:mainProduct()
+    local order = self.buildList[toString(product.id)]
+    if not order then
+        order = { quantity = 0 }
+        debugf("No order for %s (%s)", product.name, machine:name())
+    end
+    local batchCount = order.quantity / product.mainRecipe.quantity
+
     if machine:isMissingIngredients() then
-        local list = {}
-        local quantityMultiplier = 1
-        if machine.target then
-            local order = self.buildList[machine.target]
-            local pr = machine:mainProduct()
-            -- debugf("product: %s", toString(pr.recipes))
-            quantityMultiplier = order.quantity /
-                pr.recipes[1].products[1]
-                .quantity -- todo find the recipe that this machine is using
-        end
-        for n, input in pairs(machine:inputs()) do
-            table.insert(list, string.format("%s %s", input.name, math.floor(input.quantity * quantityMultiplier)))
+        local ingredients = {}
+        if order then
+            batchCount = order.quantity / product.mainRecipe.quantity
+            debugf("%s x%s (%s batches) missing ingredients", product.name, order.quantity, batchCount)
+
+            for n, input in pairs(product.mainRecipe.ingredients) do
+                local iName = system.getItem(input.id).locDisplayName
+                table.insert(ingredients, string.format("%s %s", iName, math.floor(input.quantity * batchCount)))
+            end
         end
         newStatus = string.format("%s Needs Ingredients", machine:name())
-        newDetail = table.concat(list, ", ")
+        newDetail = table.concat(ingredients, ", ")
     elseif machine:isMissingSchematics() then
         newStatus = "Needs Schematics"
     elseif machine:isFull() then
         newStatus = "Output Full"
     elseif machine:isRunning() then
         newStatus = "Running"
+        if order.quantity > 1 then
+            newDetail = string.format("Making %s (%s batches) on %s", math.floor(order.quantity),
+                math.floor(batchCount), machine:name())
+        else
+            newDetail = string.format("Making 1 on %s", machine:name())
+        end
     elseif machine:isPending() then
         newStatus = "OK"
         local order = self.buildList[toString(machine:mainProduct().id)]

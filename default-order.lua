@@ -34,7 +34,7 @@ return {
         ["2565702107"] = 1000, -- Silumin
         ["1034957327"] = 500,  -- Calcium Reinforced Copper
         ["2984358477"] = 100,  -- Stainless Steel
-        ["231758472"] = 100,   -- Duralumin
+        ["231758472"] = 500,   -- Duralumin
     },
 
     metalwork = {
@@ -50,7 +50,9 @@ return {
         ["994058204"] = 10,    -- Basic Reinforced Frame M
         ["994058205"] = 1,     -- Basic Reinforced Frame L
         ["1981362536"] = 1,    -- Uncommon Standard Frame M
+        ["1981362539"] = 1,    -- Uncommon Standard Frame L
         ["1331181119"] = 150,  -- Basic Hydraulics
+        ["1331181118"] = 125,  -- Uncommon Hydraulics
         ["625289720"] = 2,     -- Basic Chemical Container S
         ["625289726"] = 1,     -- Basic Chemical Container M
         -- ["625289727"] = 1,     -- Basic Chemical Container L
@@ -88,6 +90,7 @@ return {
 
     electronics = {
         ["2872711779"] = 100, -- Basic Connector
+        ["2872711778"] = 100, -- Uncommon Connector
         ["1297540454"] = 200, -- Basic Electronics
         ["1297540453"] = 100, -- Uncommon Electronics
         ["794666749"] = 500,  -- Basic Component
@@ -99,5 +102,6 @@ return {
         -- ["1775106597"] = 1,   -- Uncommon Core System L
         ["527681755"] = 25,   -- Basic Power System
         ["527681752"] = 25,   -- Uncommon Power System
+        ["3501535518"] = 1,   -- Uncommon Ore Scanner
     }
 }

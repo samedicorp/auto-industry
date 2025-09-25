@@ -23,6 +23,9 @@ end
 function fail(...)
 end
 
+function toString(...)
+end
+
 modula = {}
 player = {}
 system = {}
