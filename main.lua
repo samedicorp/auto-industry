@@ -154,12 +154,12 @@ function Module:updateProblems(machine)
     local newDetail
 
     local product = machine:mainProduct()
-    local order = self.buildList[toString(product.id)]
-    if not order then
-        order = { quantity = 0 }
+    local order = self.buildList[toString(product.id)] or { quantity = 0 }
+    if order.quantity == 0 then
+        order.quantity = 1
         debugf("No order for %s (%s)", product.name, machine:name())
     end
-    local batchCount = order.quantity / product.mainRecipe.quantity
+    local batchCount = math.ceil(order.quantity / product.mainRecipe.quantity)
 
     if machine:isMissingIngredients() then
         local ingredients = {}
