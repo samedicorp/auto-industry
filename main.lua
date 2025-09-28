@@ -14,7 +14,7 @@ local Module = {}
 function Module:register(parameters)
     modula:registerForEvents(self, "onStart", "onStopping", "onCheckMachines", "onCommand")
     self.orderName = parameters.orderName or "samedicorp.auto-industry.default-order"
-    self.reportMachines = parameters.reportMachines or false
+    self.reportMachines = parameters.reportMachines or true
     self.problems = {}
     self.problemsChanged = true
 end
@@ -40,6 +40,7 @@ function Module:onStart()
     self:addOrder(buildList, order.chemical, "Basic Chemical industry")
     self:addOrder(buildList, order.glass, "Basic Glass Furnace")
     self:addOrder(buildList, order.electronics, "Basic Electronics industry")
+    self:addOrder(buildList, order.electronicsU, "Uncommon Electronics industry")
     self:addOrder(buildList, order.printer, "Basic 3D Printer")
 
     local recipes = {}
@@ -154,6 +155,10 @@ function Module:updateProblems(machine)
     local newDetail
 
     local product = machine:mainProduct()
+    if not product then
+        return
+    end
+
     local order = self.buildList[toString(product.id)] or { quantity = 0 }
     if order.quantity == 0 then
         order.quantity = 1

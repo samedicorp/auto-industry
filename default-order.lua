@@ -40,6 +40,7 @@ return {
     metalwork = {
         ["2660328728"] = 25,   -- Basic Burner
         ["1799107246"] = 1024, -- Basic Pipe
+        ["1799107247"] = 50,   -- Uncommon Pipe
         ["3936127019"] = 100,  -- Basic Screw
         ["3936127018"] = 100,  -- Uncommon Screw
         ["2662317132"] = 10,   -- Basic Combustion Chamber
@@ -51,15 +52,25 @@ return {
         ["994058205"] = 1,     -- Basic Reinforced Frame L
         ["1981362536"] = 1,    -- Uncommon Standard Frame M
         ["1981362539"] = 1,    -- Uncommon Standard Frame L
+        ["1179614604"] = 1,    -- Uncommon Reinforced Frame XS
+        ["994058141"] = 1,     -- Uncommon Reinforced Frame M
         ["1331181119"] = 150,  -- Basic Hydraulics
         ["1331181118"] = 125,  -- Uncommon Hydraulics
         ["625289720"] = 2,     -- Basic Chemical Container S
         ["625289726"] = 1,     -- Basic Chemical Container M
+        ["625289663"] = 1,     -- Uncommon Chemical Container M
         -- ["625289727"] = 1,     -- Basic Chemical Container L
         ["1246524879"] = 1,    -- Uncommon Magnet
+        ["407969641"] = 1,     -- Uncommon Mobile Panel XS
+        ["494821798"] = 1,     -- Uncommon Mobile Panel M
         ["494825062"] = 1,     -- Basic Mobile Panel L
         ["997368796"] = 1,     -- Basic Robotic Arm M
+        ["997368607"] = 1,     -- Uncommon Robotic Arm M
         ["997368799"] = 1,     -- Basic Robotic Arm L
+    },
+
+    metalworkU = {
+        ["1981362606"] = 1, -- Advanced Standard Frame M
     },
 
     printer = {
@@ -94,6 +105,7 @@ return {
         ["1297540454"] = 200, -- Basic Electronics
         ["1297540453"] = 100, -- Uncommon Electronics
         ["794666749"] = 500,  -- Basic Component
+        ["794666748"] = 40,   -- Uncommon Component
         ["3808417022"] = 50,  -- Basic Processor
         ["3808417021"] = 10,  -- Uncommon Processor
         -- ["1080827609"] = 1,   -- Uncommon Antenna M
@@ -102,6 +114,12 @@ return {
         -- ["1775106597"] = 1,   -- Uncommon Core System L
         ["527681755"] = 25,   -- Basic Power System
         ["527681752"] = 25,   -- Uncommon Power System
-        ["3501535518"] = 1,   -- Uncommon Ore Scanner
+        ["3501535583"] = 1,   -- Basic Ore Scanner
+        -- ["3501535518"] = 1,   -- Uncommon Ore Scanner
+    },
+
+    electronicsU = {
+        ["1775106556"] = 1, -- Advanced Core System M
+        ["527681753"] = 25, -- Advanced Power System
     }
 }
