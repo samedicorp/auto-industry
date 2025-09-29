@@ -30,3 +30,9 @@ modula = {}
 player = {}
 system = {}
 unit = {}
+
+function SCREEN_SOURCE()
+end
+
+function TOOLKIT_SOURCE()
+end

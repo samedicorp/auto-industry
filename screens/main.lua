@@ -6,6 +6,7 @@ local Module = {
 function Module:render(payload, toolkit)
     local status = self.status
     local detail = self.detail
+    local reply
 
     if payload then
         if payload.command == "status" then

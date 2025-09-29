@@ -230,7 +230,7 @@ end
 function Module:attachToScreen()
     local service = modula:getService("screen")
     if service then
-        local screen = service:registerScreen(self, "main", "samedicorp.auto-industry.screen")
+        local screen = service:registerScreen(self, "main", "samedicorp.auto-industry.screens.main")
         if screen then
             self.screen = screen
         end
