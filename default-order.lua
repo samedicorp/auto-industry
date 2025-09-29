@@ -23,7 +23,7 @@ return {
         ["2589986891"] = 0, -- Pure Silicon
         -- ["1807690770"] = 0, -- Pure Silver
         ["3603734543"] = 0, -- Pure Sodium
-        -- ["3822811562"] = 0, -- Pure Sulfur
+        ["3822811562"] = 0, -- Pure Sulfur
         -- ["752542080"] = 0,  -- Pure Titanium
         -- ["2007627267"] = 0, -- Pure Vanadium
     },

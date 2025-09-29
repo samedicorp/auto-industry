@@ -16,5 +16,6 @@ modulaSettings = {
         ["samedicorp.modula.modules.screen"] = {},
         ["samedicorp.auto-industry.main"] = {}
     },
+    screen = "samedicorp.auto-industry.screen",
     templates = "samedicorp/auto-industry/templates"
 }

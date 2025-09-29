@@ -40,7 +40,7 @@ function Module:onStart()
     self:addOrder(buildList, order.chemical, "Basic Chemical industry")
     self:addOrder(buildList, order.glass, "Basic Glass Furnace")
     self:addOrder(buildList, order.electronics, "Basic Electronics industry")
-    self:addOrder(buildList, order.electronicsU, "Uncommon Electronics industry")
+    self:addOrder(buildList, order.electronicsU, "Uncommon Electronics Industry")
     self:addOrder(buildList, order.printer, "Basic 3D Printer")
 
     local recipes = {}
@@ -230,66 +230,11 @@ end
 function Module:attachToScreen()
     local service = modula:getService("screen")
     if service then
-        local screen = service:registerScreen(self, "main", self.renderScript)
+        local screen = service:registerScreen(self, "main", "samedicorp.auto-industry.screen")
         if screen then
             self.screen = screen
         end
     end
 end
-
-Module.renderScript = [[
-
-status = status or {}
-detail = detail or {}
-
-if payload then
-    if payload.command == "status" then
-        local key = payload.status.key
-        status[key] = payload.status.value
-        detail[key] = payload.status.detail
-    end
-    reply = { name = payload.command, result = "ok" }
-end
-
-local screen = toolkit.Screen.new()
-local layer = screen:addLayer()
-
-local cOK = toolkit.Color.new(0, 1, 0)
-local cRunning = toolkit.Color.new(1, 1, 0)
-local cWarn = toolkit.Color.new(1, 0, 0)
-local cDetail = toolkit.Color.new(0.39, 0.39, 0.39)
-local fDetail = toolkit.Font.new("Play", 12)
-
-
-local gotItems = false
-local y = 22
-for n, line in pairs(status) do
-    local color
-    local skip = false
-    if string.find(line, "Running") then
-        color = cRunning
-    elseif string.find(line, "OK") then
-        color = cOK
-        skip = true
-    else
-        color = cWarn
-    end
-
-    if not skip then
-        local label = layer:addLabel({10, y, 300, y}, n, { fill = color })
-        local value = layer:addLabel({300, y, 300, y}, line)
-        local l2 = layer:addLabel({302, y + 9, 300, y + 9}, detail[n] or "", { font = fDetail, fill = cDetail })
-        y = y + 22
-        gotItems = true
-    end
-end
-
-if not gotItems then
-    local label = layer:addLabel({0, 0, 300, 40}, "Starting Industry...")
-end
-
-layer:render()
-screen:scheduleRefresh()
-]]
 
 return Module
