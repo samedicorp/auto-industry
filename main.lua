@@ -33,15 +33,41 @@ function Module:onStart()
 
     local order = require(self.orderName)
     local buildList = {}
+    self.machineList = {}
 
-    self:addOrder(buildList, order.refiner, "Basic Refiner")
-    self:addOrder(buildList, order.smelter, "Basic Smelter")
-    self:addOrder(buildList, order.metalwork, "Basic Metalwork Industry")
-    self:addOrder(buildList, order.chemical, "Basic Chemical industry")
-    self:addOrder(buildList, order.glass, "Basic Glass Furnace")
+    -- self:addOrder(buildList, order.refiner, "Basic Refiner")
+    -- self:addOrder(buildList, order.smelter, "Basic Smelter")
+    -- self:addOrder(buildList, order.metalwork, "Basic Metalwork Industry")
+    -- self:addOrder(buildList, order.chemical, "Basic Chemical industry")
+    -- self:addOrder(buildList, order.chemical, "Uncommon Chemical industry")
+    -- self:addOrder(buildList, order.uncommonChemicals, "Uncommon Chemical Industry")
+
+    -- self:addOrder(buildList, order.glass, "Basic Glass Furnace")
+
     self:addOrder(buildList, order.electronics, "Basic Electronics industry")
-    self:addOrder(buildList, order.electronicsU, "Uncommon Electronics Industry")
-    self:addOrder(buildList, order.printer, "Basic 3D Printer")
+    -- self:addOrder(buildList, order.electronics, "Uncommon Electronics Industry")
+    -- self:addOrder(buildList, order.uncommonElectronics, "Uncommon Electronics Industry")
+
+    -- self:addOrder(buildList, order.printer, "Basic 3D Printer")
+
+    local machineList = self.machineList
+    for machine, items in pairs(machineList) do
+        local mInfo = system.getItem(machine)
+        debugf("machine %s %s", mInfo.locDisplayName, machine)
+    end
+
+    industry:withMachines(function(machine)
+        local machineClass = machine:itemId()
+        local machineItems = machineList[machineClass]
+        if machineItems then
+            debugf("machine %s %s has orders:", machine:label(), machineClass)
+            for _, item in ipairs(machineItems) do
+                local itemInfo = system.getItem(tonumber(item.id))
+                debugf("  - %s x%s", itemInfo.locDisplayName, item.quantity)
+            end
+        end
+    end)
+
 
     local recipes = {}
 
@@ -57,22 +83,22 @@ function Module:onStart()
     self.buildList = buildList
     self.recipes = recipes
 
-    modula:addTimer("onCheckMachines", 2.0)
+    -- modula:addTimer("onCheckMachines", 2.0)
 
-    self:attachToScreen()
+    -- self:attachToScreen()
 
-    if self.reportMachines then
-        industry:reportMachines()
-    end
+    -- if self.reportMachines then
+    --     industry:reportMachines()
+    -- end
 
-    local industry = self.industry
-    if industry then
-        industry:withMachines(function(machine)
-            self:updateProblems(machine)
-        end)
-    end
+    -- local industry = self.industry
+    -- if industry then
+    --     industry:withMachines(function(machine)
+    --         self:updateProblems(machine)
+    --     end)
+    -- end
 
-    self:restartMachines()
+    -- self:restartMachines()
 end
 
 function Module:onStopping()
@@ -219,11 +245,28 @@ function Module:updateProblems(machine)
 end
 
 function Module:addOrder(buildList, itemsToAdd, type)
+    local machineList = self.machineList
+    local industry = self.industry
     for id, quantity in pairs(itemsToAdd) do
         buildList[id] = {
             quantity = quantity,
             machine = type,
         }
+
+        local p = industry:productForItem(tonumber(id))
+        if p then
+            local r = p:mainRecipe()
+            if r then
+                for n, producer in ipairs(r.producers) do
+                    local itemList = machineList[producer]
+                    if not itemList then
+                        itemList = {}
+                        machineList[producer] = itemList
+                    end
+                    table.insert(itemList, { id = id, quantity = quantity })
+                end
+            end
+        end
     end
 end
 
