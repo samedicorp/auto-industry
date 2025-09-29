@@ -104,34 +104,51 @@ function Module:restartMachines()
     end
 end
 
+function Module:nextRecipeForMachine(machine)
+    local recipes = self:recipesForMachine(machine)
+    local recipeCount = #recipes
+    if recipeCount == 0 then
+        return nil
+    end
+
+    local index = (1 + (machine.index or 0) % recipeCount)
+    machine.index = index
+    return recipes[index]
+end
+
+function Module:startMachineWith(machine, recipe)
+    if machine:setRecipe(recipe.id) == 0 then
+        machine.target = recipe.id
+        machine.actual = nil
+        machine:start(recipe.quantity)
+    end
+end
+
+function Module:validateRunningMachine(machine)
+    if machine.actual ~= machine.target then
+        debugf("Running '%s' for %s (%s).", system.getItem(machine.target).locDisplayName, machine:name(),
+            machine:label())
+        machine.actual = machine.target
+    end
+end
+
 function Module:restartMachine(machine)
     if machine:isStopped() or machine:isMissingIngredients() or machine:isMissingSchematics() or machine:isPending() then
-        local machineClass = machine:itemId()
-        local recipes = self.buildList[machineClass]
-        if not recipes or #recipes == 0 then
+        local recipe = self:nextRecipeForMachine(machine)
+        if not recipe then
             debugf("No recipes for %s - %s", machine:label(), machine:name())
             return
         end
 
-        local index = (1 + (machine.index or 0) % #recipes)
-        machine.index = index
-        local buildOrder = recipes[index]
         if not machine:isStopped() then
             machine:stop()
         end
 
-        if machine:setRecipe(buildOrder.id) == 0 then
-            machine.target = buildOrder.id
-            machine.actual = nil
-            machine:start(buildOrder.quantity)
-        end
+        self:startMachineWith(machine, recipe)
     elseif machine:isRunning() then
-        if machine.actual ~= machine.target then
-            debugf("Running '%s' for %s (%s).", system.getItem(machine.target).locDisplayName, machine:name(),
-                machine:label())
-            machine.actual = machine.target
-        end
+        self:validateRunningMachine(machine)
     end
+
     self:updateProblems(machine)
 end
 
@@ -150,6 +167,21 @@ end
 -- Internal
 -- ---------------------------------------------------------------------
 
+function Module:recipesForMachine(machine)
+    local machineClass = machine:itemId()
+    return self.buildList[machineClass] or {}
+end
+
+function Module:orderForProductOnMachine(machine, product)
+    local recipes = self:recipesForMachine(machine)
+    for i, r in ipairs(recipes or {}) do
+        if r.id == product.id then
+            return r
+        end
+    end
+    return nil
+end
+
 function Module:updateProblems(machine)
     local problems = self.problems
 
@@ -161,29 +193,23 @@ function Module:updateProblems(machine)
         return
     end
 
-    local machineClass = machine:itemId()
-    local recipes = self.buildList[machineClass]
-    local order = { quantity = 0 }
-    for i, r in ipairs(recipes or {}) do
-        if r.id == product.id then
-            order = r
-            break
-        end
-    end
+    local order = self:orderForProductOnMachine(machine, product)
 
-    if order.quantity == 0 then
-        order.quantity = 1
+    local mainRecipe = product:mainRecipe()
+    local mainQuantity = mainRecipe.mainProduct.quantity
+    local batchCount
+    if not order then
+        batchCount = 1
         debugf("No order for %s (%s)", product.name, machine:name())
+    else
+        batchCount = math.ceil(order.quantity / mainQuantity)
     end
-    local batchCount = math.ceil(order.quantity / product.mainRecipe.quantity)
-
     if machine:isMissingIngredients() then
         local ingredients = {}
         if order then
-            batchCount = order.quantity / product.mainRecipe.quantity
             debugf("%s x%s (%s batches) missing ingredients", product.name, order.quantity, batchCount)
 
-            for n, input in pairs(product.mainRecipe.ingredients) do
+            for n, input in pairs(mainRecipe.ingredients) do
                 local iName = system.getItem(input.id).locDisplayName
                 table.insert(ingredients, string.format("%s %s", iName, math.floor(input.quantity * batchCount)))
             end
@@ -196,24 +222,22 @@ function Module:updateProblems(machine)
         newStatus = "Output Full"
     elseif machine:isRunning() then
         newStatus = "Running"
-        if order.quantity > 1 then
+        if order and order.quantity > 1 then
             newDetail = string.format("Making %s (%s batches) on %s", math.floor(order.quantity),
                 math.floor(batchCount), machine:name())
         else
-            newDetail = string.format("Making 1 on %s", machine:name())
+            newDetail = string.format("Making on %s", machine:name())
         end
     elseif machine:isPending() then
         newStatus = "OK"
         if order then
             newDetail = string.format("x %s", math.floor(order.quantity))
         else
-            newDetail = string.format("x %s", machine:mainProduct().id)
+            newDetail = string.format("x %s", product.id)
         end
     end
 
     if newStatus then
-        local product = machine:mainProduct()
-
         local key = product.name
         if newDetail == nil then
             newDetail = machine:name()
