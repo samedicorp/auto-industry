@@ -216,6 +216,19 @@
                 "args": []
             },
             "code": "%s"
+        },
+        {
+            "key": "10",
+            "filter": {
+                "slotKey": "1",
+                "signature": "onOutputChanged(output)",
+                "args": [
+                    {
+                        "variable": "*"
+                    }
+                ]
+            },
+            "code": "local failure = modula:call(\"onScreenReply\", output); if failure then error(failure) end"
         }
     ],
     "methods": [],
