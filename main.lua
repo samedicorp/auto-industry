@@ -15,6 +15,7 @@ function Module:register(parameters)
     modula:registerForEvents(self, "onStart", "onStopping", "onCheckMachines", "onCommand")
     self.orderName = parameters.orderName or "samedicorp.auto-industry.default-order"
     self.reportMachines = parameters.reportMachines or true
+    self.reportOrders = parameters.reportOrders or true
     self.problems = {}
     self.problemsChanged = true
 end
@@ -31,74 +32,33 @@ function Module:onStart()
     self.industry = industry
 
 
-    local order = require(self.orderName)
+    local order = require(self.orderName) -- TODO: read from databank instead
     local buildList = {}
-    self.machineList = {}
-
-    -- self:addOrder(buildList, order.refiner, "Basic Refiner")
-    -- self:addOrder(buildList, order.smelter, "Basic Smelter")
-    -- self:addOrder(buildList, order.metalwork, "Basic Metalwork Industry")
-    -- self:addOrder(buildList, order.chemical, "Basic Chemical industry")
-    -- self:addOrder(buildList, order.chemical, "Uncommon Chemical industry")
-    -- self:addOrder(buildList, order.uncommonChemicals, "Uncommon Chemical Industry")
-
-    -- self:addOrder(buildList, order.glass, "Basic Glass Furnace")
-
-    self:addOrder(buildList, order.electronics, "Basic Electronics industry")
-    -- self:addOrder(buildList, order.electronics, "Uncommon Electronics Industry")
-    -- self:addOrder(buildList, order.uncommonElectronics, "Uncommon Electronics Industry")
-
-    -- self:addOrder(buildList, order.printer, "Basic 3D Printer")
-
-    local machineList = self.machineList
-    for machine, items in pairs(machineList) do
-        local mInfo = system.getItem(machine)
-        debugf("machine %s %s", mInfo.locDisplayName, machine)
+    for _, items in pairs(order) do
+        self:addOrder(buildList, items)
     end
-
-    industry:withMachines(function(machine)
-        local machineClass = machine:itemId()
-        local machineItems = machineList[machineClass]
-        if machineItems then
-            debugf("machine %s %s has orders:", machine:label(), machineClass)
-            for _, item in ipairs(machineItems) do
-                local itemInfo = system.getItem(tonumber(item.id))
-                debugf("  - %s x%s", itemInfo.locDisplayName, item.quantity)
-            end
-        end
-    end)
-
-
-    local recipes = {}
-
-    for recipe, order in pairs(buildList) do
-        local machineRecipe = recipes[order.machine]
-        if not machineRecipe then
-            machineRecipe = {}
-            recipes[order.machine] = machineRecipe
-        end
-        table.insert(machineRecipe, recipe)
-    end
-
     self.buildList = buildList
-    self.recipes = recipes
 
-    -- modula:addTimer("onCheckMachines", 2.0)
+    modula:addTimer("onCheckMachines", 2.0)
 
-    -- self:attachToScreen()
+    self:attachToScreen()
 
-    -- if self.reportMachines then
-    --     industry:reportMachines()
-    -- end
+    if self.reportrders then
+        self:reportOrders()
+    end
 
-    -- local industry = self.industry
-    -- if industry then
-    --     industry:withMachines(function(machine)
-    --         self:updateProblems(machine)
-    --     end)
-    -- end
+    if self.reportMachines then
+        industry:reportMachines()
+    end
 
-    -- self:restartMachines()
+    local industry = self.industry
+    if industry then
+        industry:withMachines(function(machine)
+            self:updateProblems(machine)
+        end)
+    end
+
+    self:restartMachines()
 end
 
 function Module:onStopping()
@@ -117,6 +77,24 @@ function Module:onCheckMachines()
     self:restartMachines()
 end
 
+function Module:reportOrders()
+    local industry = self.industry
+    if industry then
+        local buildList = self.buildList
+        industry:withMachines(function(machine)
+            local machineClass = machine:itemId()
+            local machineItems = buildList[machineClass]
+            if machineItems then
+                debugf("machine %s %s has orders:", machine:label(), machineClass)
+                for _, item in ipairs(machineItems) do
+                    local itemInfo = system.getItem(item.id)
+                    debugf("  - %s x%s", itemInfo.locDisplayName, item.quantity)
+                end
+            end
+        end)
+    end
+end
+
 function Module:restartMachines()
     local industry = self.industry
     if industry then
@@ -128,7 +106,8 @@ end
 
 function Module:restartMachine(machine)
     if machine:isStopped() or machine:isMissingIngredients() or machine:isMissingSchematics() or machine:isPending() then
-        local recipes = self.recipes[machine:label()]
+        local machineClass = machine:itemId()
+        local recipes = self.buildList[machineClass]
         if not recipes or #recipes == 0 then
             debugf("No recipes for %s - %s", machine:label(), machine:name())
             return
@@ -136,18 +115,15 @@ function Module:restartMachine(machine)
 
         local index = (1 + (machine.index or 0) % #recipes)
         machine.index = index
-        local recipe = recipes[index]
-        local buildOrder = self.buildList[recipe]
-        if machine:label():find(buildOrder.machine) then
-            if not machine:isStopped() then
-                machine:stop()
-            end
+        local buildOrder = recipes[index]
+        if not machine:isStopped() then
+            machine:stop()
+        end
 
-            if machine:setRecipe(recipe) == 0 then
-                machine.target = recipe
-                machine.actual = nil
-                machine:start(buildOrder.quantity)
-            end
+        if machine:setRecipe(buildOrder.id) == 0 then
+            machine.target = buildOrder.id
+            machine.actual = nil
+            machine:start(buildOrder.quantity)
         end
     elseif machine:isRunning() then
         if machine.actual ~= machine.target then
@@ -185,7 +161,16 @@ function Module:updateProblems(machine)
         return
     end
 
-    local order = self.buildList[toString(product.id)] or { quantity = 0 }
+    local machineClass = machine:itemId()
+    local recipes = self.buildList[machineClass]
+    local order = { quantity = 0 }
+    for i, r in ipairs(recipes or {}) do
+        if r.id == product.id then
+            order = r
+            break
+        end
+    end
+
     if order.quantity == 0 then
         order.quantity = 1
         debugf("No order for %s (%s)", product.name, machine:name())
@@ -219,7 +204,6 @@ function Module:updateProblems(machine)
         end
     elseif machine:isPending() then
         newStatus = "OK"
-        local order = self.buildList[toString(machine:mainProduct().id)]
         if order then
             newDetail = string.format("x %s", math.floor(order.quantity))
         else
@@ -244,24 +228,18 @@ function Module:updateProblems(machine)
     end
 end
 
-function Module:addOrder(buildList, itemsToAdd, type)
-    local machineList = self.machineList
+function Module:addOrder(buildList, itemsToAdd)
     local industry = self.industry
     for id, quantity in pairs(itemsToAdd) do
-        buildList[id] = {
-            quantity = quantity,
-            machine = type,
-        }
-
-        local p = industry:productForItem(tonumber(id))
+        local p = industry:productForItem(id)
         if p then
             local r = p:mainRecipe()
             if r then
                 for n, producer in ipairs(r.producers) do
-                    local itemList = machineList[producer]
+                    local itemList = buildList[producer]
                     if not itemList then
                         itemList = {}
-                        machineList[producer] = itemList
+                        buildList[producer] = itemList
                     end
                     table.insert(itemList, { id = id, quantity = quantity })
                 end
