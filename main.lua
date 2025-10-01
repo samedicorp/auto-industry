@@ -32,6 +32,7 @@ function Module:onStart()
     local industry = modula:getService("industry")
     self.industry = industry
 
+    -- system.lockView(true)
 
     local order = require(self.orderName) -- TODO: read from databank instead
     local buildList = {}
@@ -64,6 +65,7 @@ end
 
 function Module:onStopping()
     debugf("Auto Industry stopping.")
+    -- system.lockView(false)
 end
 
 function Module:onContainerChanged(container)

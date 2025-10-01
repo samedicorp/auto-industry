@@ -1,6 +1,7 @@
 local Module = {
     status = {},
     detail = {},
+    skipOk = true,
 }
 
 function Module:render(payload, toolkit)
@@ -26,8 +27,8 @@ function Module:render(payload, toolkit)
     local cDetail = toolkit.Color.new(0.39, 0.39, 0.39)
     local fDetail = toolkit.Font.new("Play", 12)
 
-
     local gotItems = false
+
     local y = 22
     for n, line in pairs(status) do
         local color
@@ -36,7 +37,7 @@ function Module:render(payload, toolkit)
             color = cRunning
         elseif string.find(line, "OK") then
             color = cOK
-            skip = true
+            skip = self.skipOk
         else
             color = cWarn
         end
@@ -49,6 +50,21 @@ function Module:render(payload, toolkit)
             gotItems = true
         end
     end
+
+    local label
+    if self.skipOk then
+        label = "show ok"
+    else
+        label = "hide ok"
+    end
+
+    layer:addButton({ 20, 560, 100, 30 }, label, {
+        style = "line",
+        onMouseUp = function()
+            debugf("toggling skipOk from %s", tostring(self.skipOk))
+            self.skipOk = not self.skipOk
+        end
+    })
 
     if not gotItems then
         local label = layer:addLabel({ 0, 0, 300, 40 }, "Starting Industry...")
