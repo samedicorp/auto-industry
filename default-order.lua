@@ -10,22 +10,22 @@ return {
         [2031444137] = 0, -- Pure Cobalt
         [1466453887] = 0, -- Pure Copper
         [2147954574] = 0, -- Pure Chromium
-        [3323724376] = 0, -- Pure Flourine
-        [3837955371] = 0, -- Pure Gold
-        [1010524904] = 0, -- Pure Hydrogen
+        -- [3323724376] = 0, -- Pure Flourine
+        -- [3837955371] = 0, -- Pure Gold
+        -- [1010524904] = 0, -- Pure Hydrogen
         [198782496] = 0,  -- Pure Iron
         [3810111622] = 0, -- Pure Lithium
-        [2421303625] = 0, -- Pure Manganese
-        [3012303017] = 0, -- Pure Nickel
-        [1126600143] = 0, -- Pure Niobium
-        [947806142] = 0,  -- Pure Oxygen
-        [3211418846] = 0, -- Pure Scandium
+        -- [2421303625] = 0, -- Pure Manganese
+        -- [3012303017] = 0, -- Pure Nickel
+        -- [1126600143] = 0, -- Pure Niobium
+        -- [947806142] = 0,  -- Pure Oxygen
+        -- [3211418846] = 0, -- Pure Scandium
         [2589986891] = 0, -- Pure Silicon
         [1807690770] = 0, -- Pure Silver
         [3603734543] = 0, -- Pure Sodium
         [3822811562] = 0, -- Pure Sulfur
-        [752542080] = 0,  -- Pure Titanium
-        [2007627267] = 0, -- Pure Vanadium
+        -- [752542080] = 0,  -- Pure Titanium
+        -- [2007627267] = 0, -- Pure Vanadium
     },
 
     smelter = {
@@ -68,10 +68,7 @@ return {
         [997368796] = 1,     -- Basic Robotic Arm M
         [997368607] = 1,     -- Uncommon Robotic Arm M
         [997368799] = 1,     -- Basic Robotic Arm L
-    },
-
-    metalworkU = {
-        [1981362606] = 1, -- Advanced Standard Frame M
+        [1981362606] = 1,    -- Advanced Standard Frame M
     },
 
     printer = {
@@ -87,17 +84,14 @@ return {
         [4103265826] = 500,  -- Polycalcite
         [840202984] = 1000,  -- Kergon X5
         [2579672037] = 1000, -- Nitron
-    },
-
-    uncommonChemicals = {
-        [2097691217] = 500, -- Polysulfide
+        [2097691217] = 500,  -- Polysulfide
     },
 
     glass = {
-        [3308209457] = 1000, -- Glass Product
-        [1942154251] = 500,  -- Advanced Glass Product
-        [1234754162] = 100,  -- Basic LED
-        [1234754161] = 100,  -- Uncommon LED
+        [1234754162] = 100, -- Basic LED
+        [1234754161] = 100, -- Uncommon LED
+        -- [3308209457] = 1000, -- Glass Product
+        -- [1942154251] = 500,  -- Advanced Glass Product
     },
 
     electronics = {
@@ -105,8 +99,10 @@ return {
         [2872711778] = 100, -- Uncommon Connector
         [1297540454] = 200, -- Basic Electronics
         [1297540453] = 100, -- Uncommon Electronics
+        [1297540452] = 10,  -- Advanced Electronics
         [794666749] = 500,  -- Basic Component
         [794666748] = 40,   -- Uncommon Component
+        [794666751] = 10,   -- Advanced Component
         [3808417022] = 50,  -- Basic Processor
         [3808417021] = 10,  -- Uncommon Processor
         -- [1080827609] = 1,   -- Uncommon Antenna M
@@ -117,10 +113,7 @@ return {
         [527681752] = 25,   -- Uncommon Power System
         [3501535583] = 1,   -- Basic Ore Scanner
         -- [3501535518] = 1,   -- Uncommon Ore Scanner
-    },
-
-    uncommonElectronics = {
-        [1775106556] = 1, -- Advanced Core System M
-        [527681753] = 25, -- Advanced Power System
+        [1775106556] = 1,   -- Advanced Core System M
+        [527681753] = 25,   -- Advanced Power System
     }
 }

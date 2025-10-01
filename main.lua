@@ -104,6 +104,22 @@ function Module:restartMachines()
     end
 end
 
+function Module:restartMachine(machine)
+    self:updateProblems(machine)
+    if machine:isMissingIngredients() or machine:isMissingSchematics() or machine:isPending() then
+        -- stop if problems
+        machine:stop()
+    elseif machine:isStopped() then
+        -- try next recipe if stopped
+        local recipe = self:nextRecipeForMachine(machine)
+        if recipe then
+            self:startMachineWith(machine, recipe)
+        else
+            debugf("No recipes for %s - %s", machine:label(), machine:name())
+        end
+    end
+end
+
 function Module:nextRecipeForMachine(machine)
     local recipes = self:recipesForMachine(machine)
     local recipeCount = #recipes
@@ -118,38 +134,10 @@ end
 
 function Module:startMachineWith(machine, recipe)
     if machine:setRecipe(recipe.id) == 0 then
-        machine.target = recipe.id
-        machine.actual = nil
         machine:start(recipe.quantity)
+    else
+        debugf("Failed to set recipe %s on %s - %s", recipe.id, machine:label(), machine:name())
     end
-end
-
-function Module:validateRunningMachine(machine)
-    if machine.actual ~= machine.target then
-        debugf("Running '%s' for %s (%s).", system.getItem(machine.target).locDisplayName, machine:name(),
-            machine:label())
-        machine.actual = machine.target
-    end
-end
-
-function Module:restartMachine(machine)
-    if machine:isStopped() or machine:isMissingIngredients() or machine:isMissingSchematics() or machine:isPending() then
-        local recipe = self:nextRecipeForMachine(machine)
-        if not recipe then
-            debugf("No recipes for %s - %s", machine:label(), machine:name())
-            return
-        end
-
-        if not machine:isStopped() then
-            machine:stop()
-        end
-
-        self:startMachineWith(machine, recipe)
-    elseif machine:isRunning() then
-        self:validateRunningMachine(machine)
-    end
-
-    self:updateProblems(machine)
 end
 
 function Module:onCommand(command, parameters)
@@ -207,6 +195,15 @@ function Module:updateProblems(machine)
     else
         batchCount = math.ceil(order.quantity / mainQuantity)
     end
+
+    -- if product.id == 1234754162 then
+    --     debugf(toString(product))
+    --     debugf(toString(mainRecipe))
+    --     debugf("main quantity %s", mainQuantity)
+    --     debugf("batch count %s", batchCount)
+    -- end
+
+
     if machine:isMissingIngredients() then
         local ingredients = {}
         if order then
@@ -230,7 +227,7 @@ function Module:updateProblems(machine)
             newDetail = machine:name()
         else
             newStatus = string.format("%s Needs Ingredients", machine:name())
-            newDetail = table.concat(ingredients, ", ")
+            newDetail = table.concat(ingredients, " / ")
         end
     elseif machine:isMissingSchematics() then
         newStatus = "Needs Schematics"

@@ -64,8 +64,9 @@ function Module:render(payload, toolkit)
         label = "hide ok"
     end
 
-    layer:addButton({ 900, 0, 100, 30 }, label, {
+    layer:addButton({ 960, 0, 40, 20 }, label, {
         style = "line",
+        font = fDetail,
         onMouseUp = function()
             debugf("toggling skipOk from %s", tostring(self.skipOk))
             self.skipOk = not self.skipOk
