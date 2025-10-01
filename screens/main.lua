@@ -21,6 +21,7 @@ function Module:render(payload, toolkit)
     local screen = toolkit.Screen.new()
     local layer = screen:addLayer()
 
+    local cVersion = toolkit.Color.new(0.7, 0.7, 1.0)
     local cOK = toolkit.Color.new(0, 1, 0)
     local cRunning = toolkit.Color.new(1, 1, 0)
     local cWarn = toolkit.Color.new(1, 0, 0)
@@ -63,6 +64,8 @@ function Module:render(payload, toolkit)
     else
         label = "hide ok"
     end
+
+    layer:addLabel({ 10, 0, 300, 20 }, "Samedicorp Auto-Industry 1.0", { font = fDetail, fill = cVersion })
 
     layer:addButton({ 960, 0, 40, 20 }, label, {
         style = "line",

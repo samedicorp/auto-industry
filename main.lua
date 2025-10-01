@@ -54,7 +54,7 @@ function Module:onStart()
     local industry = self.industry
     if industry then
         industry:withMachines(function(machine)
-            self:updateProblems(machine)
+            self:updateStatus(machine)
         end)
     end
 
@@ -71,6 +71,17 @@ end
 
 function Module:onScreenReply(reply)
     -- printf("reply: %s", reply)
+end
+
+function Module:onCommand(command, parameters)
+    if command == "list" then
+        local industry = modula:getService("industry")
+        if industry then
+            industry:reportMachines()
+        else
+            debugf("No industry service found.")
+        end
+    end
 end
 
 function Module:onCheckMachines()
@@ -105,7 +116,7 @@ function Module:restartMachines()
 end
 
 function Module:restartMachine(machine)
-    self:updateProblems(machine)
+    self:updateStatus(machine)
     if machine:isMissingIngredients() or machine:isMissingSchematics() or machine:isPending() then
         -- stop if problems
         machine:stop()
@@ -119,6 +130,10 @@ function Module:restartMachine(machine)
         end
     end
 end
+
+-- ---------------------------------------------------------------------
+-- Internal
+-- ---------------------------------------------------------------------
 
 function Module:nextRecipeForMachine(machine)
     local recipes = self:recipesForMachine(machine)
@@ -140,21 +155,6 @@ function Module:startMachineWith(machine, recipe)
     end
 end
 
-function Module:onCommand(command, parameters)
-    if command == "list" then
-        local industry = modula:getService("industry")
-        if industry then
-            industry:reportMachines()
-        else
-            debugf("No industry service found.")
-        end
-    end
-end
-
--- ---------------------------------------------------------------------
--- Internal
--- ---------------------------------------------------------------------
-
 function Module:recipesForMachine(machine)
     local machineClass = machine:itemId()
     return self.buildList[machineClass] or {}
@@ -168,12 +168,10 @@ function Module:orderForProductOnMachine(machine, product)
         end
     end
 
-    debugf("No order for %s on %s - %s %s", product.name, machine:label(), machine:name(), machine:itemId())
-    debugf("Recipes %s", toString(recipes))
     return nil
 end
 
-function Module:updateProblems(machine)
+function Module:updateStatus(machine)
     local problems = self.problems
 
     local newStatus
@@ -191,7 +189,7 @@ function Module:updateProblems(machine)
     local batchCount
     if not order then
         batchCount = 1
-        debugf("No order for %s (%s)", product.name, machine:name())
+        debugf("No order for %s on %s - %s %s", product.name, machine:label(), machine:name(), machine:itemId())
     else
         batchCount = math.ceil(order.quantity / mainQuantity)
     end

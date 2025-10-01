@@ -36,6 +36,7 @@ return {
         [2984358477] = 100,  -- Stainless Steel
         [231758472] = 500,   -- Duralumin
         [1673011820] = 500,  -- Cu-Ag
+        [2021406770] = 500,  -- Al-Li
     },
 
     metalwork = {
