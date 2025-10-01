@@ -179,6 +179,9 @@ function Module:orderForProductOnMachine(machine, product)
             return r
         end
     end
+
+    debugf("No order for %s on %s - %s %s", product.name, machine:label(), machine:name(), machine:itemId())
+    debugf("Recipes %s", toString(recipes))
     return nil
 end
 
@@ -257,9 +260,9 @@ function Module:addOrder(buildList, itemsToAdd)
     for id, quantity in pairs(itemsToAdd) do
         local p = industry:productForItem(id)
         if p then
-            local r = p:mainRecipe()
-            if r then
+            for _, r in ipairs(p.recipes) do
                 for n, producer in ipairs(r.producers) do
+                    debugf("registered producer %s for %s", system.getItem(producer).locDisplayName, p.name)
                     local itemList = buildList[producer]
                     if not itemList then
                         itemList = {}
