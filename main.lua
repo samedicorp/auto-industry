@@ -16,6 +16,7 @@ function Module:register(parameters)
     self.orderName = parameters.orderName or "samedicorp.auto-industry.default-order"
     self.reportMachines = parameters.reportMachines or true
     self.reportOrders = parameters.reportOrders or true
+    self.reportProducers = parameters.reportProducers or false
     self.problems = {}
     self.problemsChanged = true
 end
@@ -210,8 +211,11 @@ function Module:updateProblems(machine)
     if machine:isMissingIngredients() then
         local ingredients = {}
         if order then
-            debugf("%s x%s (%s batches) missing ingredients", product.name, order.quantity, batchCount)
-
+            if order.quantity > 0 then
+                debugf("%s x%s (%s batches) missing ingredients.", product.name, order.quantity, batchCount)
+            else
+                debugf("%s missing ingredients.", product.name)
+            end
             for n, input in pairs(mainRecipe.ingredients) do
                 local iName = system.getItem(input.id).locDisplayName
                 table.insert(ingredients, string.format("%s %s", iName, math.floor(input.quantity * batchCount)))
@@ -256,13 +260,16 @@ function Module:updateProblems(machine)
 end
 
 function Module:addOrder(buildList, itemsToAdd)
+    local reportProducers = self.reportProducers
     local industry = self.industry
     for id, quantity in pairs(itemsToAdd) do
         local p = industry:productForItem(id)
         if p then
             for _, r in ipairs(p.recipes) do
                 for n, producer in ipairs(r.producers) do
-                    debugf("registered producer %s for %s", system.getItem(producer).locDisplayName, p.name)
+                    if reportProducers then
+                        debugf("registered producer %s for %s", system.getItem(producer).locDisplayName, p.name)
+                    end
                     local itemList = buildList[producer]
                     if not itemList then
                         itemList = {}
