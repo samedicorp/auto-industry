@@ -35,6 +35,7 @@ return {
         [1034957327] = 500,  -- Calcium Reinforced Copper
         [2984358477] = 100,  -- Stainless Steel
         [231758472] = 500,   -- Duralumin
+        [1673011820] = 500,  -- Cu-Ag
     },
 
     metalwork = {

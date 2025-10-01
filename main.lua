@@ -32,8 +32,6 @@ function Module:onStart()
     local industry = modula:getService("industry")
     self.industry = industry
 
-    -- system.lockView(true)
-
     local order = require(self.orderName) -- TODO: read from databank instead
     local buildList = {}
     for _, items in pairs(order) do
@@ -41,7 +39,7 @@ function Module:onStart()
     end
     self.buildList = buildList
 
-    modula:addTimer("onCheckMachines", 2.0)
+    modula:addTimer("onCheckMachines", 3.0)
 
     self:attachToScreen()
 
@@ -65,7 +63,6 @@ end
 
 function Module:onStopping()
     debugf("Auto Industry stopping.")
-    -- system.lockView(false)
 end
 
 function Module:onContainerChanged(container)
@@ -200,8 +197,8 @@ function Module:updateProblems(machine)
     end
 
     local order = self:orderForProductOnMachine(machine, product)
-
-    local mainRecipe = product:mainRecipe()
+    local producer = machine:itemId()
+    local mainRecipe = product:mainRecipe(producer)
     local mainQuantity = mainRecipe.mainProduct.quantity
     local batchCount
     if not order then
@@ -220,11 +217,21 @@ function Module:updateProblems(machine)
             end
             for n, input in pairs(mainRecipe.ingredients) do
                 local iName = system.getItem(input.id).locDisplayName
-                table.insert(ingredients, string.format("%s %s", iName, math.floor(input.quantity * batchCount)))
+                local amount = math.floor(input.quantity * batchCount)
+                if amount > 0 then
+                    table.insert(ingredients, string.format("%s %s", iName, amount))
+                else
+                    table.insert(ingredients, iName)
+                end
             end
         end
-        newStatus = string.format("%s Needs Ingredients", machine:name())
-        newDetail = table.concat(ingredients, ", ")
+        if #ingredients == 1 then
+            newStatus = string.format("Need %s", ingredients[1])
+            newDetail = machine:name()
+        else
+            newStatus = string.format("%s Needs Ingredients", machine:name())
+            newDetail = table.concat(ingredients, ", ")
+        end
     elseif machine:isMissingSchematics() then
         newStatus = "Needs Schematics"
     elseif machine:isFull() then

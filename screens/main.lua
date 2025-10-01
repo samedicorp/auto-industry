@@ -25,11 +25,16 @@ function Module:render(payload, toolkit)
     local cRunning = toolkit.Color.new(1, 1, 0)
     local cWarn = toolkit.Color.new(1, 0, 0)
     local cDetail = toolkit.Color.new(0.39, 0.39, 0.39)
-    local fDetail = toolkit.Font.new("Play", 12)
+    local fMain = toolkit.Font.new("Play", 14)
+    local fDetail = toolkit.Font.new("Play", 9)
+    local lineHeight = 22
+    local detailOffset = 6
+    local detailOptions = { font = fDetail, fill = cDetail, align = { h = toolkit.alignLeft, v = toolkit.alignBottom } }
+    local valueOptions = { font = fMain, align = { h = toolkit.alignLeft, v = toolkit.alignBottom } }
 
     local gotItems = false
 
-    local y = 22
+    local y = 50
     for n, line in pairs(status) do
         local color
         local skip = false
@@ -43,10 +48,11 @@ function Module:render(payload, toolkit)
         end
 
         if not skip then
-            local label = layer:addLabel({ 10, y, 300, y }, n, { fill = color })
-            local value = layer:addLabel({ 300, y, 300, y }, line)
-            local l2 = layer:addLabel({ 302, y + 9, 300, y + 9 }, detail[n] or "", { font = fDetail, fill = cDetail })
-            y = y + 22
+            local labelOptions = { font = fMain, fill = color, align = { h = toolkit.alignLeft, v = toolkit.alignBottom } }
+            local label = layer:addLabel({ 10, y, 300, lineHeight - detailOffset }, n, labelOptions)
+            local value = layer:addLabel({ 300, y, 300, lineHeight - detailOffset }, line, valueOptions)
+            local detail = layer:addLabel({ 302, y, 300, lineHeight }, detail[n] or "", detailOptions)
+            y = y + lineHeight
             gotItems = true
         end
     end
@@ -58,7 +64,7 @@ function Module:render(payload, toolkit)
         label = "hide ok"
     end
 
-    layer:addButton({ 20, 560, 100, 30 }, label, {
+    layer:addButton({ 900, 0, 100, 30 }, label, {
         style = "line",
         onMouseUp = function()
             debugf("toggling skipOk from %s", tostring(self.skipOk))
