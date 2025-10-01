@@ -50,9 +50,9 @@ function Module:render(payload, toolkit)
 
         if not skip then
             local labelOptions = { font = fMain, fill = color, align = { h = toolkit.alignLeft, v = toolkit.alignBottom } }
-            local label = layer:addLabel({ 10, y, 300, lineHeight - detailOffset }, n, labelOptions)
-            local value = layer:addLabel({ 300, y, 300, lineHeight - detailOffset }, line, valueOptions)
-            local detail = layer:addLabel({ 302, y, 300, lineHeight }, detail[n] or "", detailOptions)
+            layer:addLabel({ 10, y, 300, lineHeight - detailOffset }, n, labelOptions)
+            layer:addLabel({ 300, y, 300, lineHeight - detailOffset }, line, valueOptions)
+            layer:addLabel({ 302, y, 300, lineHeight }, detail[n] or "", detailOptions)
             y = y + lineHeight
             gotItems = true
         end
@@ -66,7 +66,6 @@ function Module:render(payload, toolkit)
     end
 
     layer:addLabel({ 10, 0, 300, 20 }, "Samedicorp Auto-Industry 1.0", { font = fDetail, fill = cVersion })
-
     layer:addButton({ 960, 0, 40, 20 }, label, {
         style = "line",
         font = fDetail,
@@ -75,10 +74,6 @@ function Module:render(payload, toolkit)
             self.skipOk = not self.skipOk
         end
     })
-
-    if not gotItems then
-        local label = layer:addLabel({ 0, 0, 300, 40 }, "Starting Industry...")
-    end
 
     layer:render()
     screen:scheduleRefresh()
