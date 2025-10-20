@@ -16,7 +16,7 @@ return {
         [198782496] = 0,  -- Pure Iron
         [3810111622] = 0, -- Pure Lithium
         -- [2421303625] = 0, -- Pure Manganese
-        -- [3012303017] = 0, -- Pure Nickel
+        [3012303017] = 0, -- Pure Nickel
         -- [1126600143] = 0, -- Pure Niobium
         -- [947806142] = 0,  -- Pure Oxygen
         -- [3211418846] = 0, -- Pure Scandium
@@ -29,18 +29,20 @@ return {
     },
 
     smelter = {
-        [511774178] = 1000,  -- Steel
-        [018262914] = 1000,  -- Al-Fe
-        [2565702107] = 1000, -- Silumin
-        [1034957327] = 500,  -- Calcium Reinforced Copper
-        [2984358477] = 100,  -- Stainless Steel
+        [511774178] = 2500,  -- Steel
+        [018262914] = 2500,  -- Al-Fe
+        [2565702107] = 2500, -- Silumin
+        [1034957327] = 1000, -- Calcium Reinforced Copper
+        [2984358477] = 1000, -- Stainless Steel
         [231758472] = 500,   -- Duralumin
         [1673011820] = 500,  -- Cu-Ag
         [2021406770] = 500,  -- Al-Li
+        [167908167] = 500,   -- Inconel
     },
 
     metalwork = {
         [2660328728] = 25,   -- Basic Burner
+        [2660328729] = 25,   -- Uncommon Burner
         [1799107246] = 1024, -- Basic Pipe
         [1799107247] = 50,   -- Uncommon Pipe
         [3936127019] = 100,  -- Basic Screw
@@ -51,7 +53,9 @@ return {
         [1981362474] = 1,    -- Basic Standard Frame L
         [994058182] = 5,     -- Basic Reinforced Frame S
         [994058204] = 10,    -- Basic Reinforced Frame M
-        [994058205] = 1,     -- Basic Reinforced Frame L
+        [994058205] = 2,     -- Basic Reinforced Frame L
+        [873676070] = 1,     -- Uncommon Standard Frame XS
+        [1981362450] = 1,    --  Uncommon Standard Frame S
         [1981362536] = 1,    -- Uncommon Standard Frame M
         [1981362539] = 1,    -- Uncommon Standard Frame L
         [1179614604] = 1,    -- Uncommon Reinforced Frame XS
@@ -62,6 +66,7 @@ return {
         [625289726] = 1,     -- Basic Chemical Container M
         [625289663] = 1,     -- Uncommon Chemical Container M
         -- [625289727] = 1,     -- Basic Chemical Container L
+        [1246524878] = 1,    -- Basic Magnet
         [1246524879] = 1,    -- Uncommon Magnet
         [407969641] = 1,     -- Uncommon Mobile Panel XS
         [494821798] = 1,     -- Uncommon Mobile Panel M
@@ -70,10 +75,14 @@ return {
         [997368607] = 1,     -- Uncommon Robotic Arm M
         [997368799] = 1,     -- Basic Robotic Arm L
         [1981362606] = 1,    -- Advanced Standard Frame M
+        [3640212318] = 15,   -- Basic Singularity Container
+        [3640212313] = 10,   -- Uncommon Singularity Container
+        [3640212312] = 10,   -- Advanced Singularity Container
     },
 
     printer = {
         [1971447072] = 10, -- Basic Injector
+        [1971447073] = 25, -- Uncommon Injector
         [466630565] = 100, -- Basic Fixation
         [466630564] = 100, -- Uncommon Fixation
         [184261487] = 1,   -- Uncommon Screen S
@@ -108,13 +117,18 @@ return {
         [3808417021] = 10,  -- Uncommon Processor
         -- [1080827609] = 1,   -- Uncommon Antenna M
         [4186205972] = 10,  -- Basic Power Transformer
+        [1172598456] = 2,   -- Basic Core System XS
+        [1775106685] = 2,   -- Basic Core System S
+        [1775106620] = 1,   -- Uncommon Core System S
         [1775106618] = 1,   -- Uncommon Core System M
-        -- [1775106597] = 1,   -- Uncommon Core System L
+        [1775106597] = 1,   -- Uncommon Core System L
         [527681755] = 25,   -- Basic Power System
-        [527681752] = 25,   -- Uncommon Power System
+        [527681752] = 100,  -- Uncommon Power System
         [3501535583] = 1,   -- Basic Ore Scanner
         -- [3501535518] = 1,   -- Uncommon Ore Scanner
         [1775106556] = 1,   -- Advanced Core System M
         [527681753] = 25,   -- Advanced Power System
+        [2999509666] = 10,  -- Advanced Anti-Gravity Core
+        [204457140] = 1,    -- Uncommon Mechanical Sensor
     }
 }

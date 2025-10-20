@@ -50,56 +50,56 @@
             }
         },
         "2": {
-            "name": "slot3",
+            "name": "industry1",
             "type": {
                 "methods": [],
                 "events": []
             }
         },
         "3": {
-            "name": "slot4",
+            "name": "industry2",
             "type": {
                 "methods": [],
                 "events": []
             }
         },
         "4": {
-            "name": "slot5",
+            "name": "industry3",
             "type": {
                 "methods": [],
                 "events": []
             }
         },
         "5": {
-            "name": "slot6",
+            "name": "industry4",
             "type": {
                 "methods": [],
                 "events": []
             }
         },
         "6": {
-            "name": "slot7",
+            "name": "industry5",
             "type": {
                 "methods": [],
                 "events": []
             }
         },
         "7": {
-            "name": "slot8",
+            "name": "industry6",
             "type": {
                 "methods": [],
                 "events": []
             }
         },
         "8": {
-            "name": "slot9",
+            "name": "industry7",
             "type": {
                 "methods": [],
                 "events": []
             }
         },
         "9": {
-            "name": "slot10",
+            "name": "industry8",
             "type": {
                 "methods": [],
                 "events": []

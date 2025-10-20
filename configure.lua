@@ -3,11 +3,12 @@
 --  All code (c) 2022, The Samedi Corporation.
 -- -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-local useLocal = true        --export: Use require() to load local scripts if present. Useful during development.
-local logging = true         --export: Enable controller debug output.
-local reportMachines = true  --export: Report connected industry machines on startup.
-local reportOrders = true    --export: Report orders read from order file on startup.
-local reportProducers = true --export: Report producers registered for each item in the order.
+local useLocal = true                                      --export: Use require() to load local scripts if present. Useful during development.
+local logging = true                                       --export: Enable controller debug output.
+local reportMachines = true                                --export: Report connected industry machines on startup.
+local reportOrders = true                                  --export: Report orders read from order file on startup.
+local reportProducers = true                               --export: Report producers registered for each item in the order.
+local orderName = "samedicorp.auto-industry.default-order" --export: Name of the order to load on startup.
 
 modulaSettings = {
     name = "Auto Industry",
@@ -21,6 +22,7 @@ modulaSettings = {
             reportMachines = reportMachines,
             reportOrders = reportOrders,
             reportProducers = reportProducers,
+            orderName = orderName
         }
     },
     screens = {
